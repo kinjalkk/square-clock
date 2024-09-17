@@ -50,11 +50,13 @@ export const authOptions: any = {
     async jwt({token, user}:{token:any, user:any}): Promise<any>{
       if(user){
         token.username = user.username
+        token.id=user._id
       }
       return token;
     },
     async session({session, token}: {session: any, token: any}): Promise<any>{
       session.user.username = token.username
+      session.user.id=token.id
       return session
     }
   }

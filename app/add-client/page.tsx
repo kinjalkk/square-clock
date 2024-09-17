@@ -55,7 +55,7 @@ const Page = () => {
         try {
           
           //create project and route push /
-          const createProject= createNewProject(values.client,values.project,parseInt(values.hours))
+          const createProject= await createNewProject(values.client,values.project,parseInt(values.hours))
           console.log("project created");
           
         } catch (error) {

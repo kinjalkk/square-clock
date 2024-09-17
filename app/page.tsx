@@ -2,6 +2,7 @@
 import SignedOut from "@/components/SignedOut";
 import React from "react";
 import { getServerSession } from "next-auth";
+import TimeSheet from "@/components/TimeSheet";
 
 const Home = async() => {
   const session = await getServerSession();
@@ -10,7 +11,7 @@ const Home = async() => {
     <div className="min-h-screen">
       {session && (
         <>
-        <div className="text-white">Time fill</div>
+        <TimeSheet/>
         </>     
       )}
       {!session && <SignedOut />}
