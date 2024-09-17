@@ -44,22 +44,23 @@ const Page = () => {
   async function onSubmit(values: z.infer<typeof projectSchema>) {
     console.log("hours",parseInt(values.hours));
     
-    if(parseInt(values.hours)===NaN){
+    if(isNaN(parseInt(values.hours))){
       setInvalidCredentails(true);
       return false;
-    }
-    const project = await getProject(values.client,values.project);
-    if (project) {
-      setIsProjectExist(true);
-    } else {
-      try {
-        
-        //create project and route push /
-        const createProject= createNewProject(values.client,values.project,parseInt(values.hours))
-        console.log("project created");
-        
-      } catch (error) {
-        console.log("error:", error);
+    } else{
+      const project = await getProject(values.client,values.project);
+      if (project) {
+        setIsProjectExist(true);
+      } else {
+        try {
+          
+          //create project and route push /
+          const createProject= createNewProject(values.client,values.project,parseInt(values.hours))
+          console.log("project created");
+          
+        } catch (error) {
+          console.log("error:", error);
+        }
       }
     }
   }
@@ -133,7 +134,7 @@ const Page = () => {
                 )}
               />
               {invalidCredentials && (
-                <p className="text-red-600">something went wrong</p>
+                <p className="text-red-600">something went wrong or invalid input provided</p>
               )}
               <Button type="submit" className="w-[100%] bg-red-600 mt-[3rem]">
                 Add Project
