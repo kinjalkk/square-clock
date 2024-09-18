@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { string } from "zod";
 
 const timeSchema = new mongoose.Schema({
     
@@ -21,6 +22,10 @@ const timeSchema = new mongoose.Schema({
     hours:{
         type:Number,
         default:0
+    },
+    description:{
+        type:String,
+        default:""
     }
 })
 timeSchema.pre("save",function(next){

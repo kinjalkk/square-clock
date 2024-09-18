@@ -44,7 +44,13 @@ const Navbar = ({session}:{session:any}) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={() => signOut()}
+                onClick={() => router.push("/reset-password")}
+              >
+                change password
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={async () => {await signOut();window.location.href="/"}}
               >
                 <IoIosLogOut fontSize={23} />
                 &nbsp;Logout

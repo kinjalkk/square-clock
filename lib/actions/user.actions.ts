@@ -2,7 +2,7 @@
 
 import User from "../database/models/user.model";
 import { connectToDB } from "../database/mongoose";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 export async function getUserByEmail(email: string): Promise<boolean> {
   try {
@@ -36,31 +36,38 @@ export async function getUserByUsername(username: string): Promise<boolean> {
   return false;
 }
 
-export async function getUserByEmailOrUsername(username: string): Promise<boolean> {
+export async function getUserByEmailOrUsername(
+  username: string
+): Promise<boolean> {
   try {
     connectToDB();
     const user = await User.findOne({
-      $or: [{
-        email: username
-      },
-      {
-        username: username
-      }
-    ]
-    })
-    if(user) return true;
-    return false
+      $or: [
+        {
+          email: username,
+        },
+        {
+          username: username,
+        },
+      ],
+    });
+    if (user) return true;
+    return false;
   } catch (error) {
     console.log("user.actions:Error fetching user", error);
   }
-  return false
+  return false;
 }
 
-export async function registerUser(email: string, password: string, username: string){
+export async function registerUser(
+  email: string,
+  password: string,
+  username: string
+) {
   try {
     connectToDB();
-    if(!email || !password){
-      throw new Error("Email or password missing")
+    if (!email || !password) {
+      throw new Error("Email or password missing");
     }
     const salt = 12;
 
@@ -69,24 +76,24 @@ export async function registerUser(email: string, password: string, username: st
       email: email,
       password: hashedPassword,
       username: username,
-      isAdmin:false,
-    })
+      isAdmin: false,
+    });
 
-    if(user){
+    if (user) {
       return JSON.parse(JSON.stringify(user));
     } else {
-      console.log("Error creating User")
+      console.log("Error creating User");
     }
   } catch (error) {
     console.log("user.actions:Error creating user", error);
   }
 }
 
-export async function login(username: string, password: string){
+export async function login(username: string, password: string) {
   try {
     connectToDB();
-    if(!username || !password){
-      throw new Error("Missing login credentails")
+    if (!username || !password) {
+      throw new Error("Missing login credentails");
     }
     const user = await User.findOne({
       $or: [
@@ -99,15 +106,40 @@ export async function login(username: string, password: string){
       ],
     });
     let passwordMatch;
-    if(user) {
-    passwordMatch = await bcrypt.compare(password, user.password);
+    if (user) {
+      passwordMatch = await bcrypt.compare(password, user.password);
     }
-    if(passwordMatch){
+    if (passwordMatch) {
       return JSON.parse(JSON.stringify(user));
     } else {
-      return false
+      return false;
+    }
+  } catch (error) {}
+}
+
+export async function updatePassword(email: string, password: string) {
+  try {
+    connectToDB();
+
+    const salt = 12;
+
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.findOneAndUpdate(
+      {
+        email: email,
+      },
+      {
+        password: hashedPassword,
+      }
+    );
+
+    if (user) {
+      return true;
+    } else {
+      return false;
     }
   } catch (error) {
-    
+    console.log("user.actions: Error updating password", error);
   }
 }
