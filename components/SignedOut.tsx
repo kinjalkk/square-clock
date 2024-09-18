@@ -5,8 +5,8 @@ import { FaGreaterThan } from "react-icons/fa";
 const SignedOut = () => {
   return (
 
-      <div className="bg-black pt-5 flex justify-center flex-col h-screen w-full">
-        <div className="w-[80%] m-auto">
+      <div className="bg-black pt-5 flex justify-center flex-col min-h-screen w-full">
+        <div className="w-[80%] mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex">
               <Image

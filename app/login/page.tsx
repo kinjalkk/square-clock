@@ -71,7 +71,7 @@ const Page = () => {
   };
 
   return (
-    <div className=' h-screen w-full relative bg-no-repeat bg-center bg-cover'>
+    <div className=' min-h-screen w-full relative bg-no-repeat bg-center bg-cover'>
       <div className="bg-black lg:bg-opacity-50 w-full h-full pt-5 flex justify-center h-d">
         <div className="w-[80%]">
           <div className="flex items-center ">
