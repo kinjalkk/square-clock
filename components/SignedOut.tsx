@@ -6,7 +6,7 @@ const SignedOut = () => {
   return (
 
       <div className="bg-black flex justify-center flex-col w-full">
-        <div className="w-[80%] mx-auto">
+        <div className="w-[80%] mx-auto pt-5">
           <div className="flex justify-between items-center">
             <div className="flex">
               <Image

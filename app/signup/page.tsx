@@ -77,7 +77,7 @@ const Page = () => {
     <div className='w-full relative'>
       <div className="bg-black lg:bg-opacity-50 w-full h-full flex justify-center h-d">
         <div className="w-[80%]">
-          <div className="flex items-center ">
+          <div className="flex items-center pt-5">
           <Image
           src="/images/logo.png"
           alt="logo"
