@@ -69,3 +69,28 @@ export async function getTime(userId: string) {
 
   return [];
 }
+export async function getAllTimes() {
+  try{
+    connectToDB();
+    const time=await Time.find({});
+    if(time){
+      return JSON.parse(JSON.stringify(time));
+    }
+  }catch (error){
+    console.log("time.actions: Error fetching time",error);
+  }
+  return [];
+}
+export async function getTimeByDateRange(startDate:Date,endDate:Date){
+  try{
+    const time =await Time.find({
+      chekInTime:{ $gte: startDate, $lt:endDate},
+    });
+    if(time){
+      return JSON.parse(JSON.stringify(time));
+    }
+  } catch(error){
+    console.log("time.actions: error fetching time",error);
+  }
+  return [];
+}
