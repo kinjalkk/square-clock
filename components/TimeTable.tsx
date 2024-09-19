@@ -34,124 +34,181 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const data: URL[] = [
   {
     id: "m5gr84i9",
-    user: "ki@gmail.com",
-    status: "approved",
-    url: "ken99@yahoo.com",
+    userName: "kim",
+    clientName:"Sugam",
+    projectName:"abc"
+    userMail: "ken99@yahoo.com",
+    hours:3,
+    checkInTime:"2022-01-01T10:00:00.000Z",
+    checkOutTime:"2022-01-01T13:00:00.000Z",
+    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
   },
   {
-    id: "3u1reuv4",
-    user: "ki@gmail.com",
-    status: "approved",
-    url: "Abe45@gmail.com",
+    id: "m5gr84i9",
+    userName: "kim",
+    clientName:"Sugam",
+    projectName:"abc"
+    userMail: "wdr99@yahoo.com",
+    hours:3,
+    checkInTime:"2022-01-04T10:00:00.000Z",
+    checkOutTime:"2022-01-04T13:00:00.000Z",
+    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
   },
   {
-    id: "derv1ws0",
-    user: "ki@gmail.com",
-    status: "pending",
-    url: "Monserrat44@gmail.com",
+    id: "m5gr84i9",
+    userName: "kim",
+    clientName:"Sugam",
+    projectName:"abc"
+    userMail: "xyz99@yahoo.com",
+    hours:3,
+    checkInTime:"2022-01-01T10:00:00.000Z",
+    checkOutTime:"2022-01-01T13:00:00.000Z",
+    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
   },
   {
-    id: "5kma53ae",
-    user: "ki@gmail.com",
-    status: "approved",
-    url: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    user: "ki@gmail.com",
-    status: "rejected",
-    url: "carmella@hotmail.com",
+    id: "m5gr84i9",
+    userName: "kim",
+    clientName:"Sugam",
+    projectName:"abc"
+    userMail: "mnh980@yahoo.com",
+    hours:3,
+    checkInTime:"2022-01-01T10:00:00.000Z",
+    checkOutTime:"2022-01-01T13:00:00.000Z",
+    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
   },
 ]
 
 export type URL = {
   id: string;
-  user: string;
-  status: "pending" | "approved" | "rejected" ;
-  email: string;
+  userName: string;
+  userEmail:string;
+  clientName:string;
+  projectName:string;
+  hours:number;
+  checkInTime:string;
+  checkOutTime:string;
+  description:string;
 }
 
 export const columns: ColumnDef<URL>[] = [
 
   {
-    accessorKey: "status",
+    accessorKey: "clientName",
     header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="text-white font-bold"
           >
-            Status
+            Client
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("clientName")}</div>
     ),
   },
   {
-    accessorKey: "url",
+    accessorKey: "projectName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-white font-bold"
         >
-          URL
+          Project Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("url")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("projectName")}</div>,
   },
   {
-    accessorKey: "user",
-    header: () => <div className="text-right">User</div>,
-    cell: ({ row }) => {
-      const users = row.getValue("user")?.split(",")
-
-      return <div className="text-center font-medium">{users[0]}</div>
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const url = row.getValue("url")
-
+    accessorKey: "userMail",
+    header: ({ column }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => console.log("aaaa")
-              }
-            >
-              Approve
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => console.log("rrr")
-              }
-            >
-              reject
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-white font-bold"
+        >
+          User Mail
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
     },
+    cell: ({ row }) =><div className="text-center font-medium lowercase">{row.getValue("userMail")}</div>,
   },
+  {
+    accessorKey: "userName",
+    header: ()=><div className="text-center font-bold text-white">User</div>,
+    cell: ({ row }) =><div className="text-center font-medium">{row.getValue("userName")}</div>,
+  },
+  {
+    accessorkey: "hours",
+    header: () => <div className="text-center font-boldtext-white">Hours</div>,
+    cell: ({ row }) => <div className="text-center">
+      <TooltipProvider>
+<Tooltip>
+
+<TooltipTrigger className="text-white">
+
+{row.getValue("hours")}
+
+</TooltipTrigger>
+
+<TooltipContent>
+
+<p><span className="font-bold">Start Time:</span> {new Date(row.original.checkInTime).toLocaleString('en-US', {
+
+weekday: 'long',
+month: 'long',
+
+day: 'numeric',
+
+year: 'numeric',
+
+hour: 'numeric',
+
+})}</p>
+
+<p><span className="font-bold">End Time: </span> {new Date(row.original.checkOutTime).toLocaleString('en-US', {
+
+weekday: 'long',
+month: 'long',
+
+day: 'numeric',
+
+year: 'numeric',
+
+hour: 'numeric',
+
+})}</p>
+
+<p className="w-72"><span className="font-bold">Description:</span> {row.original.description}</p>
+
+</TooltipContent>
+
+</Tooltip>
+
+</TooltipProvider>
+
+</div>,
+
+},
 ];
 
 export function TimeTable() {
@@ -164,7 +221,7 @@ export function TimeTable() {
 const [rowSelection,setRowSelection]=React.useState({});
   const [pagination,setPagination]=React.useState({
     pageIndex:0,
-    pageSize:5,
+    pageSize:20,
   });
 
   const table = useReactTable({
@@ -191,13 +248,23 @@ const [rowSelection,setRowSelection]=React.useState({});
   return (
     <div className="w-full text-white">
       <div className="flex items-center py-4">
+        <span className="pr-4">Search Client:-</span>
+      <Input
+          placeholder="Filter client..."
+          value={(table.getColumn("clientName")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("clientName")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm text-black"
+        />
+        <span className="pl-5 pr-4">Search User</span>
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("userMail")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("userMail")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm text-black"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -277,7 +344,8 @@ const [rowSelection,setRowSelection]=React.useState({});
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div className="flex-1 text-sm text-White">
+            Total Hours: {table.getRowModel().rows.reduce((total,row)=>total+row.original.hours,0)}
         </div>
         <div className="space-x-2 text-black">
           <Button

@@ -61,7 +61,7 @@ const TimeSheet = () => {
 
   return (
     <>
-    <div>
+    <div className="w-[80%]">
       <div className="mx-auto gap-6 flex flex-row items-center max-sm:ml-4">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
