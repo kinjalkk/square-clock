@@ -6,7 +6,12 @@ import { connectToDB } from "../database/mongoose";
 
 export async function reportTime(
   userId: string,
+  userMail:string,
+  userName:string,
+  projectName:string,
+  clientName:string,
   projectId: string,
+  description:string,
   checkIn: boolean
 ) {
   try {
@@ -19,7 +24,18 @@ export async function reportTime(
     });
 
     if (!time) {
-      throw new Error("Time not found");
+      const newTime=new Time({
+        userName:userName,
+        projectName:projectName,
+        clientName:clientName,
+        userMail:userMail,
+        user:userId,
+        project:projectId,
+        checkinTime:Date.now(),
+        description:description
+      })
+      const createdTime= await newTime.save();
+      return createdTime
     }
     if (checkIn) {
       time.checkInTime - Date.now();
@@ -27,9 +43,9 @@ export async function reportTime(
       time.checkOutTime - Date.now();
     }
 
-    await time.save();
+    const updatedTime=await time.save();
 
-    return true;
+    return updatedTime;
   } catch (error) {
     console.log("time.actions: Error reporting time", error);
   }
