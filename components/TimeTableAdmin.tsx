@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,10 +12,9 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -24,8 +23,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -33,89 +32,95 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-
+} from "@/components/ui/tooltip";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { CalendarIcon } from "lucide-react";
 const data: URL[] = [
   {
     id: "m5gr84i9",
     userName: "kim",
-    clientName:"Sugam",
-    projectName:"abc"
+    clientName: "Sugam",
+    projectName: "abc",
     userMail: "ken99@yahoo.com",
-    hours:3,
-    checkInTime:"2022-01-01T10:00:00.000Z",
-    checkOutTime:"2022-01-01T13:00:00.000Z",
-    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
+    hours: 3,
+    checkInTime: "2022-01-01T10:00:00.000Z",
+    checkOutTime: "2022-01-01T13:00:00.000Z",
+    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
   },
   {
     id: "m5gr84i9",
     userName: "kim",
-    clientName:"Sugam",
-    projectName:"abc"
+    clientName: "Sugam",
+    projectName: "abc",
     userMail: "wdr99@yahoo.com",
-    hours:3,
-    checkInTime:"2022-01-04T10:00:00.000Z",
-    checkOutTime:"2022-01-04T13:00:00.000Z",
-    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
+    hours: 3,
+    checkInTime: "2022-01-04T10:00:00.000Z",
+    checkOutTime: "2022-01-04T13:00:00.000Z",
+    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
   },
   {
     id: "m5gr84i9",
     userName: "kim",
-    clientName:"Sugam",
-    projectName:"abc"
+    clientName: "Sugam",
+    projectName: "abc",
     userMail: "xyz99@yahoo.com",
-    hours:3,
-    checkInTime:"2022-01-01T10:00:00.000Z",
-    checkOutTime:"2022-01-01T13:00:00.000Z",
-    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
+    hours: 3,
+    checkInTime: "2022-01-01T10:00:00.000Z",
+    checkOutTime: "2022-01-01T13:00:00.000Z",
+    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
   },
   {
     id: "m5gr84i9",
     userName: "kim",
-    clientName:"Sugam",
-    projectName:"abc"
+    clientName: "Sugam",
+    projectName: "abc",
     userMail: "mnh980@yahoo.com",
-    hours:3,
-    checkInTime:"2022-01-01T10:00:00.000Z",
-    checkOutTime:"2022-01-01T13:00:00.000Z",
-    description:"tvty uygyu yuguy uyg7y  uygukygyiu "
+    hours: 3,
+    checkInTime: "2022-01-01T10:00:00.000Z",
+    checkOutTime: "2022-01-01T13:00:00.000Z",
+    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
   },
-]
+];
 
 export type URL = {
   id: string;
   userName: string;
-  userEmail:string;
-  clientName:string;
-  projectName:string;
-  hours:number;
-  checkInTime:string;
-  checkOutTime:string;
-  description:string;
-}
+  userMail: string;
+  clientName: string;
+  projectName: string;
+  hours: number;
+  checkInTime: string;
+  checkOutTime: string;
+  description: string;
+};
 
 export const columns: ColumnDef<URL>[] = [
-
   {
     accessorKey: "clientName",
     header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-white font-bold"
-          >
-            Client
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="text-white font-bold"
+        >
+          Client
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("clientName")}</div>
     ),
@@ -132,9 +137,11 @@ export const columns: ColumnDef<URL>[] = [
           Project Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("projectName")}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("projectName")}</div>
+    ),
   },
   {
     accessorKey: "userMail",
@@ -148,82 +155,81 @@ export const columns: ColumnDef<URL>[] = [
           User Mail
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) =><div className="text-center font-medium lowercase">{row.getValue("userMail")}</div>,
+    cell: ({ row }) => (
+      <div className="text-center font-medium lowercase">
+        {row.getValue("userMail")}
+      </div>
+    ),
   },
   {
     accessorKey: "userName",
-    header: ()=><div className="text-center font-bold text-white">User</div>,
-    cell: ({ row }) =><div className="text-center font-medium">{row.getValue("userName")}</div>,
+    header: () => <div className="text-center font-bold text-white">User</div>,
+    cell: ({ row }) => (
+      <div className="text-center font-medium">{row.getValue("userName")}</div>
+    ),
   },
   {
-    accessorkey: "hours",
+    accessorKey: "hours",
     header: () => <div className="text-center font-boldtext-white">Hours</div>,
-    cell: ({ row }) => <div className="text-center">
-      <TooltipProvider>
-<Tooltip>
+    cell: ({ row }) => (
+      <div className="text-center">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="text-white">
+              {row.getValue("hours")}
+            </TooltipTrigger>
 
-<TooltipTrigger className="text-white">
+            <TooltipContent>
+              <p>
+                <span className="font-bold">Start Time:</span>{" "}
+                {new Date(row.original.checkInTime).toLocaleString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                })}
+              </p>
 
-{row.getValue("hours")}
-
-</TooltipTrigger>
-
-<TooltipContent>
-
-<p><span className="font-bold">Start Time:</span> {new Date(row.original.checkInTime).toLocaleString('en-US', {
-
-weekday: 'long',
-month: 'long',
-
-day: 'numeric',
-
-year: 'numeric',
-
-hour: 'numeric',
-
-})}</p>
-
-<p><span className="font-bold">End Time: </span> {new Date(row.original.checkOutTime).toLocaleString('en-US', {
-
-weekday: 'long',
-month: 'long',
-
-day: 'numeric',
-
-year: 'numeric',
-
-hour: 'numeric',
-
-})}</p>
-
-<p className="w-72"><span className="font-bold">Description:</span> {row.original.description}</p>
-
-</TooltipContent>
-
-</Tooltip>
-
-</TooltipProvider>
-
-</div>,
-
-},
+              <p>
+                <span className="font-bold">End Time: </span>{" "}
+                {new Date(row.original.checkOutTime).toLocaleString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                })}
+              </p>
+              <p className="w-72">
+                <span className="font-bold">Description:</span>{" "}
+                {row.original.description}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    ),
+  },
 ];
 
-export function TimeTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function TimeTableAdmin() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-const [rowSelection,setRowSelection]=React.useState({});
-  const [pagination,setPagination]=React.useState({
-    pageIndex:0,
-    pageSize:20,
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 20,
   });
-
+  const [startDate, setStartDate] = React.useState<Date | null>(null);
+  const [endDate, setEndDate] = React.useState<Date | null>(null);
+  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const table = useReactTable({
     data,
     columns,
@@ -235,23 +241,79 @@ const [rowSelection,setRowSelection]=React.useState({});
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange:setPagination,
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination:pagination,
+      pagination: pagination,
     },
   });
+  const format = (date: Date, format: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    return new Date(date).toLocaleDateString(undefined, options);
+  };
+  const handleSelectDate = (date: Date) => {
+    setIsCalendarOpen(false);
+    setStartDate(date);
+  };
 
+  const handleSelectEndDate = (date: Date) => {
+    setIsCalendarOpen(false);
+    setEndDate(date);
+  };
+  const handleToggleCalendar = () => {
+    setIsCalendarOpen(!isCalendarOpen);
+  };
   return (
     <div className="w-full text-white">
+<div className="flex justify-between pt-8">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant={"outline"} className="w-1/4 text-black" onClick={handleToggleCalendar}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {startDate ? format(startDate, "PPP") : <span>Pick start date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className={`w-auto p-0 ${isCalendarOpen ? '' : 'hidden'}`}>
+          <Calendar
+            mode="single"
+            selected={startDate}
+            onSelect={(date) => handleSelectDate(date)}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant={"outline"} className="w-1/4 text-black" onClick={handleToggleCalendar}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className={`w-auto p-0 ${isCalendarOpen ? '' : 'hidden'}`}>
+          <Calendar
+            mode="single"
+            selected={endDate}
+            onSelect={(date) => handleSelectEndDate(date)}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
       <div className="flex items-center py-4">
         <span className="pr-4">Search Client:-</span>
-      <Input
+        <Input
           placeholder="Filter client..."
-          value={(table.getColumn("clientName")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("clientName")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("clientName")?.setFilterValue(event.target.value)
           }
@@ -260,11 +322,13 @@ const [rowSelection,setRowSelection]=React.useState({});
         <span className="pl-5 pr-4">Search User</span>
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("userMail")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("userMail")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn("userMail")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm text-black"
+          className="max-w-sm text-black mr-8"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -288,7 +352,7 @@ const [rowSelection,setRowSelection]=React.useState({});
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -308,7 +372,7 @@ const [rowSelection,setRowSelection]=React.useState({});
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -345,7 +409,10 @@ const [rowSelection,setRowSelection]=React.useState({});
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-White">
-            Total Hours: {table.getRowModel().rows.reduce((total,row)=>total+row.original.hours,0)}
+          Total Hours:{" "}
+          {table
+            .getRowModel()
+            .rows.reduce((total, row) => total + row.original.hours, 0)}
         </div>
         <div className="space-x-2 text-black">
           <Button
@@ -367,5 +434,5 @@ const [rowSelection,setRowSelection]=React.useState({});
         </div>
       </div>
     </div>
-  )
+  );
 }
