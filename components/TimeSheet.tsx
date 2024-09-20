@@ -63,6 +63,7 @@ const TimeSheet = () => {
       selectedClient,
       selectedProject._id,
       "desc",
+      selectedProject.maxTime,
       true
     );
   };

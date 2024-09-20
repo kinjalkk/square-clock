@@ -22,6 +22,10 @@ const timeSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    maxHours:{
+        type:Number,
+        required:true,
+    },
     project:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Project"

@@ -14,16 +14,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -47,54 +37,144 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
-const data: URL[] = [
+const data: TimeSchema[] = [
   {
-    id: "m5gr84i9",
-    userName: "kim",
-    clientName: "Sugam",
-    projectName: "abc",
-    userMail: "ken99@yahoo.com",
-    hours: 3,
-    checkInTime: "2022-01-01T10:00:00.000Z",
-    checkOutTime: "2022-01-01T13:00:00.000Z",
-    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
+    "id": "2q49t8n3",
+    "userName": "Sarah Lee",
+    "clientName": "GreenTech Inc.",
+    "projectName": "Solar Roof Design",
+    "userMail": "sarah.lee@greentech.com",
+    "hours": 7,
+    "checkInTime": "2024-09-18T09:15:00.000Z",
+    "checkOutTime": "2024-09-18T16:30:00.000Z",
+    "description": "Reviewing construction plans and material selection",
+    "maxHours": 80
+    },
+    {
+      "id": "1pbz07nl",
+      "userName": "David Kim",
+      "clientName": "Happy Homes",
+      "projectName": "Kitchen Renovation",
+      "userMail": "david.kim@happyhomes.co",
+      "hours": 2,
+      "checkInTime": "2024-09-19T14:00:00.000Z",
+      "checkOutTime": "2024-09-19T16:00:00.000Z",
+      "description": "Client meeting to finalize design details",
+      "maxHours": 25
+    },
+    {
+    "id": "9x8fr5tm",
+    "userName": "Maria Garcia",
+    "clientName": "Central Park",
+    "projectName": "Landscape Design",
+    "userMail": "maria.garcia@centralpark.org",
+    "hours": 5,
+    "checkInTime": "2024-09-17T11:00:00.000Z",
+    "checkOutTime": "2024-09-17T16:00:00.000Z",
+    "description": "Site visit and initial design sketches",
+    "maxHours": 120
+    },
+    {
+      "id": "0w3ei1un",
+      "userName": "John Anderson",
+      "clientName": "City Museum",
+      "projectName": "Expansion Wing",
+      "userMail": "john.anderson@citymuseum.gov",
+      "hours": 8,
+      "checkInTime": "2024-09-16T08:30:00.000Z",
+      "checkOutTime": "2024-09-16T17:00:00.000Z",
+      "description": "Creating 3D models and structural calculations",
+      "maxHours": 200
+    },
+    {
+    "id": "az7tm2qp",
+    "userName": "Emily Jones",
+    "clientName": "Sun and Sand Resorts",
+    "projectName": "Pool Deck Design",
+    "userMail": "emily.jones@sunandsand.com",
+    "hours": 4,
+    "checkInTime": "2024-09-20T10:00:00.000Z",  // Today's date
+    "checkOutTime": "2024-09-20T14:00:00.000Z",  // Today's date
+    "description": "Preparing renderings and material samples",
+    "maxHours": 30
+    },
+    {
+      "id": "8y5xn0kl",
+      "userName": "Michael Chen",
+      "clientName": "Tech Startup HQ",
+      "projectName": "Open Office Layout",
+      "userMail": "michael.chen@techstartup.com",
+      "hours": 1,
+      "checkInTime": "2024-09-19T17:00:00.000Z",
+      "checkOutTime": "2024-09-19T18:00:00.000Z",
+      "description": "Internal team meeting on project progress",
+      "maxHours": 70
+    },
+
+{
+  "id": "8y5xn0kl",
+  "userName": "Michael Chen",
+  "clientName": "Tech Startup HQ",
+  "projectName": "Open Office Layout",
+  "userMail": "michael.chen@techstartup.com",
+  "hours": 1,
+  "checkInTime": "2024-09-19T17:00:00.000Z",
+  "checkOutTime": "2024-09-19T18:00:00.000Z",
+  "description": "Internal team meeting on project progress",
+  "maxHours": 15
   },
   {
-    id: "m5gr84i9",
-    userName: "kim",
-    clientName: "Sugam",
-    projectName: "abc",
-    userMail: "wdr99@yahoo.com",
-    hours: 3,
-    checkInTime: "2022-01-04T10:00:00.000Z",
-    checkOutTime: "2022-01-04T13:00:00.000Z",
-    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
+  "id": "4p3w06t2",
+  "userName": "Olivia Smith",
+  "clientName": "Historic Preservation Society",
+  "projectName": "Building Restoration",
+  "userMail": "[email address removed]",
+  "hours": 6,
+  "checkInTime": "2024-09-17T09:00:00.000Z",
+  "checkOutTime": "2024-09-17T15:00:00.000Z",
+  "description": "Researching historical building codes and materials",
+  "maxHours": 100
   },
   {
-    id: "m5gr84i9",
-    userName: "kim",
-    clientName: "Sugam",
-    projectName: "abc",
-    userMail: "xyz99@yahoo.com",
-    hours: 3,
-    checkInTime: "2022-01-01T10:00:00.000Z",
-    checkOutTime: "2022-01-01T13:00:00.000Z",
-    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
+  "id": "7z6q18n5",
+  "userName": "Daniel Lee",
+  "clientName": "Luxury Condominium Developer",
+  "projectName": "Interior Design",
+  "userMail": "daniel.lee@luxurycondo.com",
+  "hours": 3,
+  "checkInTime": "2024-09-20T11:00:00.000Z",
+  "checkOutTime": "2024-09-20T14:00:00.000Z",
+  "description": "Selecting furniture and finishes for model unit",
+  "maxHours": 40
   },
   {
-    id: "m5gr84i9",
-    userName: "kim",
-    clientName: "Sugam",
-    projectName: "abc",
-    userMail: "mnh980@yahoo.com",
-    hours: 3,
-    checkInTime: "2022-01-01T10:00:00.000Z",
-    checkOutTime: "2022-01-01T13:00:00.000Z",
-    description: "tvty uygyu yuguy uyg7y  uygukygyiu ",
+  "id": "2x9y07t4",
+  "userName": "Ava Johnson",
+  "clientName": "Sustainable Living Center",
+  "projectName": "Green Building Design",
+  "userMail": "[email address removed]",
+  "hours": 5,
+  "checkInTime": "2024-09-18T10:00:00.000Z",
+  "checkOutTime": "2024-09-18T15:00:00.000Z",
+  "description": "Calculating energy efficiency and environmental impact",
+  "maxHours": 80
   },
+  {
+  "id": "5w8e19n3",
+  "userName": "Ethan Brown",
+  "clientName": "Educational Institution",
+  "projectName": "Classroom Layout",
+  "userMail": "ethan.brown@education.edu",
+  "hours": 2,
+  "checkInTime": "2024-09-20T15:00:00.000Z",
+  "checkOutTime": "2024-09-20T17:00:00.000Z",
+  "description": "Meeting with teachers to discuss classroom needs",
+  "maxHours": 20
+  }
+ 
 ];
 
-export type URL = {
+export type TimeSchema = {
   id: string;
   userName: string;
   userMail: string;
@@ -104,9 +184,10 @@ export type URL = {
   checkInTime: string;
   checkOutTime: string;
   description: string;
+  maxHours:number;
 };
 
-export const columns: ColumnDef<URL>[] = [
+export const columns: ColumnDef<TimeSchema>[] = [
   {
     accessorKey: "clientName",
     header: ({ column }) => {
@@ -114,7 +195,7 @@ export const columns: ColumnDef<URL>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-white font-bold"
+          className="text-white font-bold justify-center"
         >
           Client
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -122,25 +203,29 @@ export const columns: ColumnDef<URL>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("clientName")}</div>
+      <div className="capitalize text-center">{row.getValue("clientName")}</div>
     ),
   },
   {
     accessorKey: "projectName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-white font-bold"
-        >
-          Project Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: () => <div className="text-center font-bold text-white">Project</div>,
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("projectName")}</div>
+      <div className="text-center">
+                <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="text-white">
+              {row.getValue("hours")}
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <p>
+                <span className="font-bold">Total alotted:</span>{" "}
+                {row.original.maxHours} hrs
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+    </div>
     ),
   },
   {
@@ -171,8 +256,22 @@ export const columns: ColumnDef<URL>[] = [
     ),
   },
   {
+    accessorKey: "checkInTime",
+    header: () => <div className="text-center font-bold text-white">date</div>,
+    cell: ({ row }) => (
+      <div className="text-center font-medium lowercase">
+        {new Date(row.original.checkInTime).toLocaleString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+      </div>
+    ),
+  },
+  {
     accessorKey: "hours",
-    header: () => <div className="text-center font-boldtext-white">Hours</div>,
+    header: () => <div className="text-center font-bold text-white">Hours</div>,
     cell: ({ row }) => (
       <div className="text-center">
         <TooltipProvider>
@@ -185,10 +284,6 @@ export const columns: ColumnDef<URL>[] = [
               <p>
                 <span className="font-bold">Start Time:</span>{" "}
                 {new Date(row.original.checkInTime).toLocaleString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
                   hour: "numeric",
                 })}
               </p>
@@ -196,10 +291,6 @@ export const columns: ColumnDef<URL>[] = [
               <p>
                 <span className="font-bold">End Time: </span>{" "}
                 {new Date(row.original.checkOutTime).toLocaleString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
                   hour: "numeric",
                 })}
               </p>
@@ -225,7 +316,7 @@ export function TimeTableAdmin() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
-    pageSize: 20,
+    pageSize: 6,
   });
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
@@ -319,7 +410,7 @@ export function TimeTableAdmin() {
           }
           className="max-w-sm text-black"
         />
-        <span className="pl-5 pr-4">Search User</span>
+        <span className="pl-5 pr-4">Search User:-</span>
         <Input
           placeholder="Filter emails..."
           value={
@@ -330,32 +421,6 @@ export function TimeTableAdmin() {
           }
           className="max-w-sm text-black mr-8"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto text-black">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -364,7 +429,7 @@ export function TimeTableAdmin() {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-center">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -411,7 +476,7 @@ export function TimeTableAdmin() {
         <div className="flex-1 text-sm text-White">
           Total Hours:{" "}
           {table
-            .getRowModel()
+            .getFilteredRowModel()
             .rows.reduce((total, row) => total + row.original.hours, 0)}
         </div>
         <div className="space-x-2 text-black">

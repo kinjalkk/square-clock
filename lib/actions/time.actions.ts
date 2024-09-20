@@ -12,6 +12,7 @@ export async function reportTime(
   clientName:string,
   projectId: string,
   description:string,
+  maxHours:number,
   checkIn: boolean
 ) {
   try {
@@ -32,7 +33,8 @@ export async function reportTime(
         user:userId,
         project:projectId,
         checkinTime:Date.now(),
-        description:description
+        description:description,
+        maxHours:maxHours
       })
       const createdTime= await newTime.save();
       return createdTime

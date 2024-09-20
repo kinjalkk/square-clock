@@ -75,7 +75,7 @@ const Page = () => {
 
   return (
     <div className='w-full relative'>
-      <div className="bg-black lg:bg-opacity-50 w-full h-full flex justify-center h-d">
+      <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
         <div className="w-[80%]">
           <div className="flex items-center pt-5">
           <Image
