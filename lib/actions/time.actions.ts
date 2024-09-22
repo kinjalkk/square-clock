@@ -1,18 +1,15 @@
 "use server";
 
+import Project from "../database/models/project.model";
 import Time from "../database/models/time.model";
+import User from "../database/models/user.model";
 
 import { connectToDB } from "../database/mongoose";
 
 export async function reportTime(
   userId: string,
-  userMail:string,
-  userName:string,
-  projectName:string,
-  clientName:string,
   projectId: string,
   description:string,
-  maxHours:number,
   checkIn: boolean
 ) {
   try {
@@ -26,15 +23,10 @@ export async function reportTime(
 
     if (!time) {
       const newTime=new Time({
-        userName:userName,
-        projectName:projectName,
-        clientName:clientName,
-        userMail:userMail,
         user:userId,
         project:projectId,
         checkinTime:Date.now(),
         description:description,
-        maxHours:maxHours
       })
       const createdTime= await newTime.save();
       return createdTime
@@ -63,7 +55,16 @@ export async function getTime(userId: string) {
     });
 
     if (time) {
-      return JSON.parse(JSON.stringify(time));
+      const populateTimes= await Promise.all(
+        time.map(async (t)=>{
+          const project=await Project.findById(t.project).select("client project maxTime");
+          return{
+            ...t.toObject(),
+            project,
+          }
+        })
+      )
+      return JSON.parse(JSON.stringify(populateTimes));
     }
   } catch (error) {
     console.log("time.actions: Error fetching time", error);
@@ -75,8 +76,19 @@ export async function getAllTimes() {
   try{
     connectToDB();
     const time=await Time.find({});
-    if(time){
-      return JSON.parse(JSON.stringify(time));
+    if (time) {
+      const populateTimes= await Promise.all(
+        time.map(async (t)=>{
+          const project=await Project.findById(t.project).select("client project maxTime");
+          const user=await User.findById(t.user).select("username email")
+          return{
+            ...t.toObject(),
+            project,
+            user,
+          }
+        })
+      )
+      return JSON.parse(JSON.stringify(populateTimes));
     }
   }catch (error){
     console.log("time.actions: Error fetching time",error);
@@ -88,8 +100,19 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
     const time =await Time.find({
       chekInTime:{ $gte: startDate, $lt:endDate},
     });
-    if(time){
-      return JSON.parse(JSON.stringify(time));
+    if (time) {
+      const populateTimes= await Promise.all(
+        time.map(async (t)=>{
+          const project=await Project.findById(t.project).select("client project maxTime");
+          const user=await User.findById(t.user).select("username email")
+          return{
+            ...t.toObject(),
+            project,
+            user,
+          }
+        })
+      )
+      return JSON.parse(JSON.stringify(populateTimes));
     }
   } catch(error){
     console.log("time.actions: error fetching time",error);

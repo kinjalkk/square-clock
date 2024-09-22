@@ -47,23 +47,18 @@ const TimeSheet = () => {
     })();
   }, [selectedClient]);
   useEffect(() => {
-    async () => {
-      if (session && session.data && session.data.user.id) {
+    (async () => {
+      if (session.status==="authenticated") {
         const times = await getTime(session.data.user.id);
         setAllTimes(times);
       }
-    };
-  });
+    })();
+  },[session.status]);
   const start = async () => {
     const startedTime = await reportTime(
       session.data?.user.id,
-      session.data?.user?.email,
-      session.data?.user?.name,
-      selectedProject.project,
-      selectedClient,
       selectedProject._id,
       "desc",
-      selectedProject.maxTime,
       true
     );
   };

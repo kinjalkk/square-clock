@@ -1,30 +1,10 @@
 import mongoose from "mongoose";
 
 const timeSchema = new mongoose.Schema({
-    userName:{
-        type:String,
-        required:true,
-    },
-    userMail:{
-        type:String,
-        required:true,
-    },
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
         required:true
-    },
-    projectName:{
-        type:String,
-        required:true,
-    },
-    clientName:{
-        type:String,
-        required:true,
-    },
-    maxHours:{
-        type:Number,
-        required:true,
     },
     project:{
         type:mongoose.Schema.Types.ObjectId,
