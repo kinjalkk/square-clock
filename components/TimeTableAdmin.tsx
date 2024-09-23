@@ -37,141 +37,141 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
+import * as XLSX from "exceljs";
 const data: TimeSchema[] = [
   {
-    "id": "2q49t8n3",
-    "userName": "Sarah Lee",
-    "clientName": "GreenTech Inc.",
-    "projectName": "Solar Roof Design",
-    "userMail": "sarah.lee@greentech.com",
-    "hours": 7,
-    "checkInTime": "2024-09-18T09:15:00.000Z",
-    "checkOutTime": "2024-09-18T16:30:00.000Z",
-    "description": "Reviewing construction plans and material selection",
-    "maxHours": 80
-    },
-    {
-      "id": "1pbz07nl",
-      "userName": "David Kim",
-      "clientName": "Happy Homes",
-      "projectName": "Kitchen Renovation",
-      "userMail": "david.kim@happyhomes.co",
-      "hours": 2,
-      "checkInTime": "2024-09-19T14:00:00.000Z",
-      "checkOutTime": "2024-09-19T16:00:00.000Z",
-      "description": "Client meeting to finalize design details",
-      "maxHours": 25
-    },
-    {
-    "id": "9x8fr5tm",
-    "userName": "Maria Garcia",
-    "clientName": "Central Park",
-    "projectName": "Landscape Design",
-    "userMail": "maria.garcia@centralpark.org",
-    "hours": 5,
-    "checkInTime": "2024-09-17T11:00:00.000Z",
-    "checkOutTime": "2024-09-17T16:00:00.000Z",
-    "description": "Site visit and initial design sketches",
-    "maxHours": 120
-    },
-    {
-      "id": "0w3ei1un",
-      "userName": "John Anderson",
-      "clientName": "City Museum",
-      "projectName": "Expansion Wing",
-      "userMail": "john.anderson@citymuseum.gov",
-      "hours": 8,
-      "checkInTime": "2024-09-16T08:30:00.000Z",
-      "checkOutTime": "2024-09-16T17:00:00.000Z",
-      "description": "Creating 3D models and structural calculations",
-      "maxHours": 200
-    },
-    {
-    "id": "az7tm2qp",
-    "userName": "Emily Jones",
-    "clientName": "Sun and Sand Resorts",
-    "projectName": "Pool Deck Design",
-    "userMail": "emily.jones@sunandsand.com",
-    "hours": 4,
-    "checkInTime": "2024-09-20T10:00:00.000Z",  // Today's date
-    "checkOutTime": "2024-09-20T14:00:00.000Z",  // Today's date
-    "description": "Preparing renderings and material samples",
-    "maxHours": 30
-    },
-    {
-      "id": "8y5xn0kl",
-      "userName": "Michael Chen",
-      "clientName": "Tech Startup HQ",
-      "projectName": "Open Office Layout",
-      "userMail": "michael.chen@techstartup.com",
-      "hours": 1,
-      "checkInTime": "2024-09-19T17:00:00.000Z",
-      "checkOutTime": "2024-09-19T18:00:00.000Z",
-      "description": "Internal team meeting on project progress",
-      "maxHours": 70
-    },
+    id: "2q49t8n3",
+    userName: "Sarah Lee",
+    clientName: "GreenTech Inc.",
+    projectName: "Solar Roof Design",
+    userMail: "sarah.lee@greentech.com",
+    hours: 7,
+    checkInTime: "2024-09-18T09:15:00.000Z",
+    checkOutTime: "2024-09-18T16:30:00.000Z",
+    description: "Reviewing construction plans and material selection",
+    maxHours: 80,
+  },
+  {
+    id: "1pbz07nl",
+    userName: "David Kim",
+    clientName: "Happy Homes",
+    projectName: "Kitchen Renovation",
+    userMail: "david.kim@happyhomes.co",
+    hours: 2,
+    checkInTime: "2024-09-19T14:00:00.000Z",
+    checkOutTime: "2024-09-19T16:00:00.000Z",
+    description: "Client meeting to finalize design details",
+    maxHours: 25,
+  },
+  {
+    id: "9x8fr5tm",
+    userName: "Maria Garcia",
+    clientName: "Central Park",
+    projectName: "Landscape Design",
+    userMail: "maria.garcia@centralpark.org",
+    hours: 5,
+    checkInTime: "2024-09-17T11:00:00.000Z",
+    checkOutTime: "2024-09-17T16:00:00.000Z",
+    description: "Site visit and initial design sketches",
+    maxHours: 120,
+  },
+  {
+    id: "0w3ei1un",
+    userName: "John Anderson",
+    clientName: "City Museum",
+    projectName: "Expansion Wing",
+    userMail: "john.anderson@citymuseum.gov",
+    hours: 8,
+    checkInTime: "2024-09-16T08:30:00.000Z",
+    checkOutTime: "2024-09-16T17:00:00.000Z",
+    description: "Creating 3D models and structural calculations",
+    maxHours: 200,
+  },
+  {
+    id: "az7tm2qp",
+    userName: "Emily Jones",
+    clientName: "Sun and Sand Resorts",
+    projectName: "Pool Deck Design",
+    userMail: "emily.jones@sunandsand.com",
+    hours: 4,
+    checkInTime: "2024-09-20T10:00:00.000Z", // Today's date
+    checkOutTime: "2024-09-20T14:00:00.000Z", // Today's date
+    description: "Preparing renderings and material samples",
+    maxHours: 30,
+  },
+  {
+    id: "8y5xn0kl",
+    userName: "Michael Chen",
+    clientName: "Tech Startup HQ",
+    projectName: "Open Office Layout",
+    userMail: "michael.chen@techstartup.com",
+    hours: 1,
+    checkInTime: "2024-09-19T17:00:00.000Z",
+    checkOutTime: "2024-09-19T18:00:00.000Z",
+    description: "Internal team meeting on project progress",
+    maxHours: 70,
+  },
 
-{
-  "id": "8y5xn0kl",
-  "userName": "Michael Chen",
-  "clientName": "Tech Startup HQ",
-  "projectName": "Open Office Layout",
-  "userMail": "michael.chen@techstartup.com",
-  "hours": 1,
-  "checkInTime": "2024-09-19T17:00:00.000Z",
-  "checkOutTime": "2024-09-19T18:00:00.000Z",
-  "description": "Internal team meeting on project progress",
-  "maxHours": 15
+  {
+    id: "8y5xn0kl",
+    userName: "Michael Chen",
+    clientName: "Tech Startup HQ",
+    projectName: "Open Office Layout",
+    userMail: "michael.chen@techstartup.com",
+    hours: 1,
+    checkInTime: "2024-09-19T17:00:00.000Z",
+    checkOutTime: "2024-09-19T18:00:00.000Z",
+    description: "Internal team meeting on project progress",
+    maxHours: 15,
   },
   {
-  "id": "4p3w06t2",
-  "userName": "Olivia Smith",
-  "clientName": "Historic Preservation Society",
-  "projectName": "Building Restoration",
-  "userMail": "[email address removed]",
-  "hours": 6,
-  "checkInTime": "2024-09-17T09:00:00.000Z",
-  "checkOutTime": "2024-09-17T15:00:00.000Z",
-  "description": "Researching historical building codes and materials",
-  "maxHours": 100
+    id: "4p3w06t2",
+    userName: "Olivia Smith",
+    clientName: "Historic Preservation Society",
+    projectName: "Building Restoration",
+    userMail: "[email address removed]",
+    hours: 6,
+    checkInTime: "2024-09-17T09:00:00.000Z",
+    checkOutTime: "2024-09-17T15:00:00.000Z",
+    description: "Researching historical building codes and materials",
+    maxHours: 100,
   },
   {
-  "id": "7z6q18n5",
-  "userName": "Daniel Lee",
-  "clientName": "Luxury Condominium Developer",
-  "projectName": "Interior Design",
-  "userMail": "daniel.lee@luxurycondo.com",
-  "hours": 3,
-  "checkInTime": "2024-09-20T11:00:00.000Z",
-  "checkOutTime": "2024-09-20T14:00:00.000Z",
-  "description": "Selecting furniture and finishes for model unit",
-  "maxHours": 40
+    id: "7z6q18n5",
+    userName: "Daniel Lee",
+    clientName: "Luxury Condominium Developer",
+    projectName: "Interior Design",
+    userMail: "daniel.lee@luxurycondo.com",
+    hours: 3,
+    checkInTime: "2024-09-20T11:00:00.000Z",
+    checkOutTime: "2024-09-20T14:00:00.000Z",
+    description: "Selecting furniture and finishes for model unit",
+    maxHours: 40,
   },
   {
-  "id": "2x9y07t4",
-  "userName": "Ava Johnson",
-  "clientName": "Sustainable Living Center",
-  "projectName": "Green Building Design",
-  "userMail": "[email address removed]",
-  "hours": 5,
-  "checkInTime": "2024-09-18T10:00:00.000Z",
-  "checkOutTime": "2024-09-18T15:00:00.000Z",
-  "description": "Calculating energy efficiency and environmental impact",
-  "maxHours": 80
+    id: "2x9y07t4",
+    userName: "Ava Johnson",
+    clientName: "Sustainable Living Center",
+    projectName: "Green Building Design",
+    userMail: "[email address removed]",
+    hours: 5,
+    checkInTime: "2024-09-18T10:00:00.000Z",
+    checkOutTime: "2024-09-18T15:00:00.000Z",
+    description: "Calculating energy efficiency and environmental impact",
+    maxHours: 80,
   },
   {
-  "id": "5w8e19n3",
-  "userName": "Ethan Brown",
-  "clientName": "Educational Institution",
-  "projectName": "Classroom Layout",
-  "userMail": "ethan.brown@education.edu",
-  "hours": 2,
-  "checkInTime": "2024-09-20T15:00:00.000Z",
-  "checkOutTime": "2024-09-20T17:00:00.000Z",
-  "description": "Meeting with teachers to discuss classroom needs",
-  "maxHours": 20
-  }
- 
+    id: "5w8e19n3",
+    userName: "Ethan Brown",
+    clientName: "Educational Institution",
+    projectName: "Classroom Layout",
+    userMail: "ethan.brown@education.edu",
+    hours: 2,
+    checkInTime: "2024-09-20T15:00:00.000Z",
+    checkOutTime: "2024-09-20T17:00:00.000Z",
+    description: "Meeting with teachers to discuss classroom needs",
+    maxHours: 20,
+  },
 ];
 
 export type TimeSchema = {
@@ -184,7 +184,7 @@ export type TimeSchema = {
   checkInTime: string;
   checkOutTime: string;
   description: string;
-  maxHours:number;
+  maxHours: number;
 };
 
 export const columns: ColumnDef<TimeSchema>[] = [
@@ -208,10 +208,12 @@ export const columns: ColumnDef<TimeSchema>[] = [
   },
   {
     accessorKey: "projectName",
-    header: () => <div className="text-center font-bold text-white">Project</div>,
+    header: () => (
+      <div className="text-center font-bold text-white">Project</div>
+    ),
     cell: ({ row }) => (
       <div className="text-center">
-                <TooltipProvider>
+        <TooltipProvider>
           <Tooltip>
             <TooltipTrigger className="text-white">
               {row.getValue("hours")}
@@ -225,7 +227,7 @@ export const columns: ColumnDef<TimeSchema>[] = [
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-    </div>
+      </div>
     ),
   },
   {
@@ -261,11 +263,11 @@ export const columns: ColumnDef<TimeSchema>[] = [
     cell: ({ row }) => (
       <div className="text-center font-medium lowercase">
         {new Date(row.original.checkInTime).toLocaleString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })}
       </div>
     ),
   },
@@ -307,6 +309,7 @@ export const columns: ColumnDef<TimeSchema>[] = [
 ];
 
 export function TimeTableAdmin() {
+  const [csvData, setCSVData] = React.useState(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -361,43 +364,102 @@ export function TimeTableAdmin() {
   const handleToggleCalendar = () => {
     setIsCalendarOpen(!isCalendarOpen);
   };
+
+  const downloadExcel = () => {
+    const workbook = new XLSX.Workbook();
+    const sheet = workbook.addWorksheet("TimeSheet");
+    const columns = [
+      " Client",
+      "Project",
+      "Max Hours",
+      "Description",
+      "User",
+      "Date",
+      "Hours",
+    ];
+    sheet.addRow(columns);
+    table.getFilteredRowModel().rows.forEach((row) => {
+      sheet.addRow([
+        row.original.clientName,
+        row.original.projectName,
+        row.original.maxHours,
+        row.original.description,
+        row.original.userName,
+        new Date(row.original.checkInTime).toLocaleString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+        }),
+        row.original.hours,
+      ]);
+    });
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      setCSVData(blob);
+      const url = window.URL.createobjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "TimeSheet.xlsx";
+      a.click();
+    });
+  };
   return (
     <div className="w-full text-white">
-<div className="flex justify-between pt-8">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant={"outline"} className="w-1/4 text-black" onClick={handleToggleCalendar}>
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {startDate ? format(startDate, "PPP") : <span>Pick start date</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className={`w-auto p-0 ${isCalendarOpen ? '' : 'hidden'}`}>
-          <Calendar
-            mode="single"
-            selected={startDate}
-            onSelect={(date) => handleSelectDate(date)}
-            initialFocus
-          />
-        </PopoverContent>
-      </Popover>
+      <div className="flex justify-between pt-8">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className="w-1/4 text-black"
+              onClick={handleToggleCalendar}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {startDate ? (
+                format(startDate, "PPP")
+              ) : (
+                <span>Pick start date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className={`w-auto p-0 ${isCalendarOpen ? "" : "hidden"}`}
+          >
+            <Calendar
+              mode="single"
+              selected={startDate}
+              onSelect={(date) => handleSelectDate(date)}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant={"outline"} className="w-1/4 text-black" onClick={handleToggleCalendar}>
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className={`w-auto p-0 ${isCalendarOpen ? '' : 'hidden'}`}>
-          <Calendar
-            mode="single"
-            selected={endDate}
-            onSelect={(date) => handleSelectEndDate(date)}
-            initialFocus
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className="w-1/4 text-black"
+              onClick={handleToggleCalendar}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className={`w-auto p-0 ${isCalendarOpen ? "" : "hidden"}`}
+          >
+            <Calendar
+              mode="single"
+              selected={endDate}
+              onSelect={(date) => handleSelectEndDate(date)}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       <div className="flex items-center py-4">
         <span className="pr-4">Search Client:-</span>
         <Input
@@ -478,6 +540,7 @@ export function TimeTableAdmin() {
           {table
             .getFilteredRowModel()
             .rows.reduce((total, row) => total + row.original.hours, 0)}
+            <Button variant="outline" size="sm" className="ml-4 text-black" onClick={downloadExcel}>DownLoad</Button>
         </div>
         <div className="space-x-2 text-black">
           <Button

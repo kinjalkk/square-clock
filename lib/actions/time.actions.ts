@@ -9,8 +9,8 @@ import { connectToDB } from "../database/mongoose";
 export async function reportTime(
   userId: string,
   projectId: string,
-  description:string,
-  checkIn: boolean
+  checkIn: boolean,
+  description?:string,
 ) {
   try {
     connectToDB();
@@ -26,7 +26,7 @@ export async function reportTime(
         user:userId,
         project:projectId,
         checkinTime:Date.now(),
-        description:description,
+        description:description||"",
       })
       const createdTime= await newTime.save();
       return createdTime

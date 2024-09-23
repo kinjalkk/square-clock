@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
 import { useSession } from "next-auth/react";
 import { getTime, reportTime } from "@/lib/actions/time.actions";
+import { TimeTable } from "./TimeTable";
 const TimeSheet = () => {
   const router = useRouter();
   const session = useSession();
@@ -31,6 +32,7 @@ const TimeSheet = () => {
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
   const [alltimes, setAllTimes] = React.useState([]);
+  const [description,setDescription]=React.useState("")
 
   useEffect(() => {
     (async () => {
@@ -58,8 +60,8 @@ const TimeSheet = () => {
     const startedTime = await reportTime(
       session.data?.user.id,
       selectedProject._id,
-      "desc",
-      true
+      true,
+      description,
     );
   };
 
@@ -76,7 +78,7 @@ const TimeSheet = () => {
                 className="w-[200px] justify-between"
               >
                 {selectedClient
-                  ? clients.find((client) => client === selectedClient)
+                  ? clients?.find((client) => client === selectedClient)
                   : "Select client..."}
 
                 <ChevronsUpDown className="m1-2 h-4 w-4 shrink-e opacity-50" />
@@ -91,7 +93,7 @@ const TimeSheet = () => {
                   <CommandEmpty>No client found.</CommandEmpty>
 
                   <CommandGroup>
-                    {clients.map((client) => (
+                    {clients?.map((client) => (
                       <CommandItem
                         key={client}
                         value={client}
@@ -178,9 +180,18 @@ const TimeSheet = () => {
           )}
 
           {selectedProject && selectedClient && (
+            <>
+            <textarea
+            className="border rounded-md p-2 w-full"
+            placeholder="Enter description"
+            value={description}
+            onChange={(e)=>setDescription(e.target.value)}
+            />
             <Button onClick={start}>Start</Button>
+            </>
           )}
         </div>
+        <TimeTable/>
       </div>
     </>
   );
