@@ -43,22 +43,26 @@ import LiveTimer from "@/components/LiveTimer";
 export type TimeSchemaUser = {
   _id: string;
   user:string;
-  project:{
-    _id:string;
-    client:string;
-    project:string;
-    maxTime:number;
-  };
+  project:string;
   hours: number;
+  description:string;
   checkInTime: string;
   checkOutTime: string;
-  description: string;
   __v:number;
+  projectClient:string;
+  projectName:string;
+  projectMaxTime:number;
 };
 
 
 
-export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSchemaUser[]}) {
+export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}:{stop:(timeId:string)=>void,
+  times:TimeSchemaUser[],
+  startDate:Date |null,
+  setStartDate:React.Dispatch<React.SetStateAction<Date|null>>,
+  endDate:Date | null,
+  setEndDate:React.Dispatch<React.SetStateAction<Date|null>>,
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -70,16 +74,15 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
     pageIndex: 0,
     pageSize: 6,
   });
-  const [startDate, setStartDate] = React.useState<Date | null>(null);
-  const [endDate, setEndDate] = React.useState<Date | null>(null);
-  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const [data,setData]=React.useState<TimeSchemaUser[]>(times);
+  const [isPickUpStartOpen,setIsPickUpStartOpen]=React.useState<boolean>(false);
+  const [isEndDateOpen,setIsEndDateOpen]=React.useState<boolean>(false);
   React.useEffect(()=>{
     setData(times);
   },[times]);
   const columns: ColumnDef<TimeSchemaUser>[] = [
     {
-      accessorKey: "project",
+      accessorKey: "projectClient",
       header: ({ column }) => {
         return (
           <Button
@@ -93,24 +96,24 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("project").client}</div>
+        <div className="capitalize text-center">{row.getValue("projectClient")}</div>
       ),
     },
     {
-      accessorKey: "project",
+      accessorKey: "projectName",
       header: () => <div className="text-center font-bold text-white">Project</div>,
       cell: ({ row }) => (
         <div className="text-center">
                   <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="text-white">
-                {row.getValue("project").project}
+                {row.getValue("projectName")}
               </TooltipTrigger>
   
               <TooltipContent>
                 <p>
                   <span className="font-bold">Total alotted:</span>{" "}
-                  {row.original.project.maxTime} hrs
+                  {row.original.projectMaxTime} hrs
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -151,6 +154,7 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
                   <span className="font-bold">Start Time:</span>{" "}
                   {new Date(row.original.checkInTime).toLocaleString("en-US", {
                     hour: "numeric",
+                    minute:"numeric",
                   })}
                 </p>
   
@@ -158,6 +162,7 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
                   <span className="font-bold">End Time: </span>{" "}
                   {row.original.checkOutTime?new Date(row.original.checkOutTime).toLocaleString("en-US", {
                     hour: "numeric",
+                    minute:"numeric"
                   }):"Not ended"}
                 </p>
                 <p className="w-72">
@@ -221,8 +226,8 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
       alert("Start date cannot be later than end date.");
       return;
     }
-    setIsCalendarOpen(false);
     setStartDate(date);
+    setIsPickUpStartOpen(false)
   };
 
   const handleSelectEndDate = (date: Date) => {
@@ -234,23 +239,20 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
       alert("End date cannot be earlier than Start date.");
       return;
     }
-    setIsCalendarOpen(false);
     setEndDate(date);
-  };
-  const handleToggleCalendar = () => {
-    setIsCalendarOpen(!isCalendarOpen);
+    setIsEndDateOpen(false)
   };
   return (
     <div className="w-full text-white">
 <div className="flex justify-between pt-8">
-      <Popover>
+      <Popover open={isPickUpStartOpen} onOpenChange={setIsPickUpStartOpen}>
         <PopoverTrigger asChild>
-          <Button variant={"outline"} className="w-1/4 text-black" onClick={handleToggleCalendar}>
+          <Button variant={"outline"} className="w-1/4 text-black">
             <CalendarIcon className="mr-2 h-4 w-4" />
             {startDate ? format(startDate, "PPP") : <span>Pick start date</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className={`w-auto p-0 ${isCalendarOpen ? '' : 'hidden'}`}>
+        <PopoverContent className={`w-auto p-0`}>
           <Calendar
             mode="single"
             selected={startDate}
@@ -260,14 +262,14 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
         </PopoverContent>
       </Popover>
 
-      <Popover>
+      <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
         <PopoverTrigger asChild>
-          <Button variant={"outline"} className="w-1/4 text-black" onClick={handleToggleCalendar}>
+          <Button variant={"outline"} className="w-1/4 text-black">
             <CalendarIcon className="mr-2 h-4 w-4" />
             {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className={`w-auto p-0 ${isCalendarOpen ? '' : 'hidden'}`}>
+        <PopoverContent className={`w-auto p-0 `}>
           <Calendar
             mode="single"
             selected={endDate}
@@ -284,12 +286,12 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
       <div className="flex items-center py-4">
         <span className="pr-4">Search Client:-</span>
         <Input
-          placeholder="Filter client..."
+          placeholder="Filter Project..."
           value={
-            (table.getColumn("clientName")?.getFilterValue() as string) ?? ""
+            (table.getColumn("projectName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("clientName")?.setFilterValue(event.target.value)
+            table.getColumn("projectName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-black"
         />

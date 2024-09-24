@@ -51,12 +51,14 @@ export const authOptions: any = {
       if(user){
         token.username = user.username
         token.id=user._id
+        token.isAdmin=user.isAdmin
       }
       return token;
     },
     async session({session, token}: {session: any, token: any}): Promise<any>{
       session.user.username = token.username
       session.user.id=token.id
+      session.isAdmin=token.isAdmin
       return session
     }
   }

@@ -19,8 +19,8 @@ import {
 import { useRouter } from "next/navigation";
 import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
 import { useSession } from "next-auth/react";
-import { checkActiveTime, getTime, startTime, stopTime } from "@/lib/actions/time.actions";
-import { TimeTable } from "./TimeTable";
+import { checkActiveTime, getTime,getTimeByDateRangeUser, startTime, stopTime } from "@/lib/actions/time.actions";
+import { TimeSchemaUser,TimeTable } from "./TimeTable";
 const TimeSheet = () => {
   const router = useRouter();
   const session = useSession();
@@ -31,9 +31,10 @@ const TimeSheet = () => {
   const [selectedProject, setSelectedProject] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
-  const [alltimes, setAllTimes] = React.useState([]);
+  const [alltimes, setAllTimes] = React.useState<TimeSchemaUser[]>([]);
   const [description,setDescription]=React.useState("")
-
+  const [startDate, setStartDate] = React.useState<Date | null>(null);
+  const [endDate, setEndDate] = React.useState<Date | null>(null);
   useEffect(() => {
     (async () => {
       const clientsFormDb = await getAllClients();
@@ -49,7 +50,12 @@ const TimeSheet = () => {
     })();
   }, [selectedClient]);
   const fetchTimes= async () => {
-    const times = await getTime(session.data.user.id);
+    let times:TimeSchemaUser[];
+    if(startDate && endDate){
+      times = await getTimeByDateRangeUser(startDate,endDate,session.data?.user.id);
+    }else{
+      times = await getTime(session.data.user.id);
+    }
     setAllTimes(times);
   }
   useEffect(() => {
@@ -205,7 +211,7 @@ const TimeSheet = () => {
             </>
           )}
         </div>
-        <TimeTable stop={stop} times={alltimes}/>
+        <TimeTable stop={stop} times={alltimes} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
       </div>
     </>
   );

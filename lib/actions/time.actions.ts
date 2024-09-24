@@ -55,7 +55,9 @@ export async function getTime(userId: string) {
           const project=await Project.findById(t.project).select("client project maxTime");
           return{
             ...t.toObject(),
-            project,
+            projectClient:project?.client,
+            projectName:project?.project,
+            projectMaxTime:project?.maxtime,
           }
         })
       )
@@ -78,8 +80,11 @@ export async function getAllTimes() {
           const user=await User.findById(t.user).select("username email")
           return{
             ...t.toObject(),
-            project,
-            user,
+            projectClient:project?.client,
+            projectName:project?.project,
+            projectMaxTime:project?.maxtime,
+            userName:user?.username,
+            userEmail:user?.email,
           }
         })
       )
@@ -93,7 +98,7 @@ export async function getAllTimes() {
 export async function getTimeByDateRange(startDate:Date,endDate:Date){
   try{
     const time =await Time.find({
-      chekInTime:{ $gte: startDate, $lt:endDate},
+      checkInTime:{ $gte: startDate, $lt:new Date(endDate.getTime()+24*60*60*1000)},
     }).sort({checkInTime:-1});
     if (time) {
       const populateTimes= await Promise.all(
@@ -102,8 +107,11 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
           const user=await User.findById(t.user).select("username email")
           return{
             ...t.toObject(),
-            project,
-            user,
+            projectClient:project?.client,
+            projectName:project?.project,
+            projectMaxTime:project?.maxtime,
+            userName:user?.username,
+            userEmail:user?.email,
           }
         })
       )
@@ -111,6 +119,33 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
     }
   } catch(error){
     console.log("time.actions: error fetching time",error);
+  }
+  return [];
+}
+
+export async function getTimeByDateRangeUser(startDate: Date, endDate: Date, userId:string) {
+  try {
+  connectToDB();
+  const time = await Time.find({ user: userId,
+  checkInTime: { $gte: startDate, $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000) }, 
+}).sort({ checkInTime: -1 }); 
+if (time) {
+  const populateTimes = await Promise.all(
+  time.map(async (t) => {
+  const project = await Project.findById(t.project).select("client project maxTime");
+  return {
+  ...t.toobject(), 
+  projectclient: project?.client, 
+  projectName: project?.project, 
+  projectMaxTime: project?.maxTime, 
+}; 
+  }) 
+  ); 
+  return JSON.parse(JSON.stringify(populateTimes)); 
+  }
+}
+  catch (error) {
+  console.log("time.actions: Error fetching time by date range for user", error);
   }
   return [];
 }

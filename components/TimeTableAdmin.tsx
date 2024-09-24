@@ -38,28 +38,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import * as XLSX from "exceljs";
-import { getAllTimes, stopTime } from "@/lib/actions/time.actions";
+import { getAllTimes,getTimeByDateRange, stopTime } from "@/lib/actions/time.actions";
 import LiveTimer from "./LiveTimer";
 
 
 export type TimeSchema = {
   _id: string;
-  project:{
-    _id:string;
-    client:string;
-    project:string;
-    maxTime:number;
-  };
-  user:{
-    _id:string;
-    username:string;
-    email:string;
-  };
+  user:string;
+  project:string;
   hours: number;
+  description:string;
   checkInTime: string;
   checkOutTime: string;
-  description: string;
   __v:number;
+  projectClient:string;
+  projectName:string;
+  projectMaxTime:number;
+  userName:string;
+  userEmail:string;
 };
 
 
@@ -77,18 +73,20 @@ export function TimeTableAdmin() {
   });
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
-  const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const [data,setData]=React.useState<TimeSchema[]>([]);
   const getTimes=async ()=>{
-    const allTimes:TimeSchema[]= await getAllTimes();
+    let allTimes:TimeSchema[];
+    if(startDate && endDate){
+      allTimes= await getTimeByDateRange(startDate,endDate);
+    } else{
+      allTimes=await getAllTimes();
+    }
     setData(allTimes);
   }
-  React.useEffect(()=>{
-    getTimes();
-  },[])
+
   const columns: ColumnDef<TimeSchema>[] = [
     {
-      accessorKey: "client",
+      accessorKey: "projectClient",
       header: ({ column }) => {
         return (
           <Button
@@ -102,11 +100,11 @@ export function TimeTableAdmin() {
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("project").client}</div>
+        <div className="capitalize text-center">{row.getValue("projectClient")}</div>
       ),
     },
     {
-      accessorKey: "project",
+      accessorKey: "projectName",
       header: () => (
         <div className="text-center font-bold text-white">Project</div>
       ),
@@ -115,13 +113,13 @@ export function TimeTableAdmin() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="text-white">
-                {row.getValue("project").project}
+                {row.getValue("projectName")}
               </TooltipTrigger>
   
               <TooltipContent>
                 <p>
                   <span className="font-bold">Total alotted:</span>{" "}
-                  {row.original.project.maxTime} hrs
+                  {row.original.projectMaxTime} hrs
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -130,7 +128,7 @@ export function TimeTableAdmin() {
       ),
     },
     {
-      accessorKey: "userMail",
+      accessorKey: "userEmail",
       header: ({ column }) => {
         return (
           <Button
@@ -145,15 +143,15 @@ export function TimeTableAdmin() {
       },
       cell: ({ row }) => (
         <div className="text-center font-medium lowercase">
-          {row.original.user.email}
+          {row.getValue("userEmail")}
         </div>
       ),
     },
     {
-      accessorKey: "user",
+      accessorKey: "userName",
       header: () => <div className="text-center font-bold text-white">User</div>,
       cell: ({ row }) => (
-        <div className="text-center font-medium">{row.getValue("user").username}</div>
+        <div className="text-center font-medium">{row.getValue("userName")}</div>
       ),
     },
     {
@@ -189,6 +187,7 @@ export function TimeTableAdmin() {
                   <span className="font-bold">Start Time:</span>{" "}
                   {new Date(row.original.checkInTime).toLocaleString("en-US", {
                     hour: "numeric",
+                    minute:"numeric",
                   })}
                 </p>
   
@@ -196,6 +195,7 @@ export function TimeTableAdmin() {
                   <span className="font-bold">End Time: </span>{" "}
                   {row.original.checkOutTime?new Date(row.original.checkOutTime).toLocaleString("en-US", {
                     hour: "numeric",
+                    minute:"numeric",
                   }):"Not ended"}
                 </p>
                 <p className="w-72">
@@ -242,6 +242,9 @@ export function TimeTableAdmin() {
       pagination: pagination,
     },
   });
+  React.useEffect(()=>{
+    getTimes();
+  },[startDate,endDate])
   const format = (date: Date, format: string): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -263,7 +266,6 @@ export function TimeTableAdmin() {
       alert("Start date cannot be later than end date.");
       return;
     }
-    setIsCalendarOpen(false);
     setStartDate(date);
   };
 
@@ -276,11 +278,7 @@ export function TimeTableAdmin() {
       alert("End date cannot be earlier than Start date.");
       return;
     }
-    setIsCalendarOpen(false);
     setEndDate(date);
-  };
-  const handleToggleCalendar = () => {
-    setIsCalendarOpen(!isCalendarOpen);
   };
 
   const downloadExcel = () => {
@@ -298,11 +296,11 @@ export function TimeTableAdmin() {
     sheet.addRow(columns);
     table.getFilteredRowModel().rows.forEach((row) => {
       sheet.addRow([
-        row.original.project.client,
-        row.original.project.project,
-        row.original.project.maxTime,
+        row.original.projectClient,
+        row.original.projectName,
+        row.original.projectMaxTime,
         row.original.description,
-        row.original.user.username,
+        row.original.userName,
         new Date(row.original.checkInTime).toLocaleString("en-US", {
           weekday: "long",
           month: "long",
@@ -332,7 +330,6 @@ export function TimeTableAdmin() {
             <Button
               variant={"outline"}
               className="w-1/4 text-black"
-              onClick={handleToggleCalendar}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {startDate ? (
@@ -343,7 +340,7 @@ export function TimeTableAdmin() {
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className={`w-auto p-0 ${isCalendarOpen ? "" : "hidden"}`}
+            className={`w-auto p-0`}
           >
             <Calendar
               mode="single"
@@ -359,14 +356,13 @@ export function TimeTableAdmin() {
             <Button
               variant={"outline"}
               className="w-1/4 text-black"
-              onClick={handleToggleCalendar}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className={`w-auto p-0 ${isCalendarOpen ? "" : "hidden"}`}
+            className={`w-auto p-0`}
           >
             <Calendar
               mode="single"
@@ -386,10 +382,10 @@ export function TimeTableAdmin() {
         <Input
           placeholder="Filter project..."
           value={
-            (table.getColumn("project")?.getFilterValue() as string) ?? ""
+            (table.getColumn("projectName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("project")?.setFilterValue(event.target.value)
+            table.getColumn("projectName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-black"
         />
@@ -397,10 +393,10 @@ export function TimeTableAdmin() {
         <Input
           placeholder="Filter user..."
           value={
-            (table.getColumn("user")?.getFilterValue() as string) ?? ""
+            (table.getColumn("userName")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("user")?.setFilterValue(event.target.value)
+            table.getColumn("userName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-black mr-8"
         />
