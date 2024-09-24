@@ -62,7 +62,7 @@ const TimeSheet = () => {
     if (session.status==="authenticated") {
       fetchTimes()
     }
-  },[session.status]);
+  },[session.status,startDate,endDate]);
   const start = async () => {
     const startedTime = await startTime(
       session.data?.user.id,

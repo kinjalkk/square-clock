@@ -56,12 +56,12 @@ export type TimeSchemaUser = {
 
 
 
-export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}:{stop:(timeId:string)=>void,
-  times:TimeSchemaUser[],
-  startDate:Date |null,
-  setStartDate:React.Dispatch<React.SetStateAction<Date|null>>,
-  endDate:Date | null,
-  setEndDate:React.Dispatch<React.SetStateAction<Date|null>>,
+export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}:{stop:(timeId:string)=>void;
+  times:TimeSchemaUser[];
+  startDate:Date |null;
+  setStartDate:React.Dispatch<React.SetStateAction<Date|null>>;
+  endDate:Date | null;
+  setEndDate:React.Dispatch<React.SetStateAction<Date|null>>;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

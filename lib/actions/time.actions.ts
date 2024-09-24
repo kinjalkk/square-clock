@@ -126,16 +126,17 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
 export async function getTimeByDateRangeUser(startDate: Date, endDate: Date, userId:string) {
   try {
   connectToDB();
-  const time = await Time.find({ user: userId,
-  checkInTime: { $gte: startDate, $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000) }, 
+  const time = await Time.find({
+    user: userId,
+    checkInTime: { $gte: startDate, $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000) }, 
 }).sort({ checkInTime: -1 }); 
 if (time) {
   const populateTimes = await Promise.all(
   time.map(async (t) => {
   const project = await Project.findById(t.project).select("client project maxTime");
   return {
-  ...t.toobject(), 
-  projectclient: project?.client, 
+  ...t.toObject(), 
+  projectClient: project?.client, 
   projectName: project?.project, 
   projectMaxTime: project?.maxTime, 
 }; 

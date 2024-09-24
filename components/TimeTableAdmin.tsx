@@ -74,6 +74,8 @@ export function TimeTableAdmin() {
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
   const [data,setData]=React.useState<TimeSchema[]>([]);
+  const [isPickUpStartOpen,setIsPickUpStartOpen]=React.useState<boolean>(false);
+  const [isEndDateOpen,setIsEndDateOpen]=React.useState<boolean>(false);
   const getTimes=async ()=>{
     let allTimes:TimeSchema[];
     if(startDate && endDate){
@@ -267,6 +269,7 @@ export function TimeTableAdmin() {
       return;
     }
     setStartDate(date);
+    setIsPickUpStartOpen(false);
   };
 
   const handleSelectEndDate = (date: Date) => {
@@ -279,6 +282,7 @@ export function TimeTableAdmin() {
       return;
     }
     setEndDate(date);
+    setIsEndDateOpen(false);
   };
 
   const downloadExcel = () => {
@@ -315,7 +319,7 @@ export function TimeTableAdmin() {
       const blob = new Blob([buffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-      const url = window.URL.createobjectURL(blob);
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = "TimeSheet.xlsx";
@@ -325,7 +329,7 @@ export function TimeTableAdmin() {
   return (
     <div className="w-full text-white">
       <div className="flex justify-between pt-8">
-        <Popover>
+        <Popover open={isPickUpStartOpen} onOpenChange={setIsPickUpStartOpen}>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
@@ -351,7 +355,7 @@ export function TimeTableAdmin() {
           </PopoverContent>
         </Popover>
 
-        <Popover>
+        <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
