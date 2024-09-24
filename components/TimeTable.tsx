@@ -176,7 +176,7 @@ export function TimeTable({stop,times}:{stop:(timeId:string)=>void,times:TimeSch
       cell: ({ row }) => {
         return (
           row.original.hours===0? (
-          <Button variant="ghost" className="h-8 w-8 p-0" onClick={stop}>
+          <Button variant="ghost" className="h-8 w-8 p-0" onClick={()=>stop(row.original._id)}>
                 <CircleStop className="h-4 w-4" />
               </Button>):(<></>)
           

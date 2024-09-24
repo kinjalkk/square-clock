@@ -49,9 +49,6 @@ export async function getTime(userId: string) {
     const time = await Time.find({
       user: userId,
     }).sort({checkInTime:-1});
-
-
-
     if (time) {
       const populateTimes= await Promise.all(
         time.map(async (t)=>{
@@ -73,7 +70,7 @@ export async function getTime(userId: string) {
 export async function getAllTimes() {
   try{
     connectToDB();
-    const time=await Time.find({});
+    const time=await Time.find({}).sort({checkInTime:-1});
     if (time) {
       const populateTimes= await Promise.all(
         time.map(async (t)=>{
@@ -97,7 +94,7 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
   try{
     const time =await Time.find({
       chekInTime:{ $gte: startDate, $lt:endDate},
-    });
+    }).sort({checkInTime:-1});
     if (time) {
       const populateTimes= await Promise.all(
         time.map(async (t)=>{

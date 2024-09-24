@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown, CircleStop, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -38,278 +38,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import * as XLSX from "exceljs";
-const data: TimeSchema[] = [
-  {
-    id: "2q49t8n3",
-    userName: "Sarah Lee",
-    clientName: "GreenTech Inc.",
-    projectName: "Solar Roof Design",
-    userMail: "sarah.lee@greentech.com",
-    hours: 7,
-    checkInTime: "2024-09-18T09:15:00.000Z",
-    checkOutTime: "2024-09-18T16:30:00.000Z",
-    description: "Reviewing construction plans and material selection",
-    maxHours: 80,
-  },
-  {
-    id: "1pbz07nl",
-    userName: "David Kim",
-    clientName: "Happy Homes",
-    projectName: "Kitchen Renovation",
-    userMail: "david.kim@happyhomes.co",
-    hours: 2,
-    checkInTime: "2024-09-19T14:00:00.000Z",
-    checkOutTime: "2024-09-19T16:00:00.000Z",
-    description: "Client meeting to finalize design details",
-    maxHours: 25,
-  },
-  {
-    id: "9x8fr5tm",
-    userName: "Maria Garcia",
-    clientName: "Central Park",
-    projectName: "Landscape Design",
-    userMail: "maria.garcia@centralpark.org",
-    hours: 5,
-    checkInTime: "2024-09-17T11:00:00.000Z",
-    checkOutTime: "2024-09-17T16:00:00.000Z",
-    description: "Site visit and initial design sketches",
-    maxHours: 120,
-  },
-  {
-    id: "0w3ei1un",
-    userName: "John Anderson",
-    clientName: "City Museum",
-    projectName: "Expansion Wing",
-    userMail: "john.anderson@citymuseum.gov",
-    hours: 8,
-    checkInTime: "2024-09-16T08:30:00.000Z",
-    checkOutTime: "2024-09-16T17:00:00.000Z",
-    description: "Creating 3D models and structural calculations",
-    maxHours: 200,
-  },
-  {
-    id: "az7tm2qp",
-    userName: "Emily Jones",
-    clientName: "Sun and Sand Resorts",
-    projectName: "Pool Deck Design",
-    userMail: "emily.jones@sunandsand.com",
-    hours: 4,
-    checkInTime: "2024-09-20T10:00:00.000Z", // Today's date
-    checkOutTime: "2024-09-20T14:00:00.000Z", // Today's date
-    description: "Preparing renderings and material samples",
-    maxHours: 30,
-  },
-  {
-    id: "8y5xn0kl",
-    userName: "Michael Chen",
-    clientName: "Tech Startup HQ",
-    projectName: "Open Office Layout",
-    userMail: "michael.chen@techstartup.com",
-    hours: 1,
-    checkInTime: "2024-09-19T17:00:00.000Z",
-    checkOutTime: "2024-09-19T18:00:00.000Z",
-    description: "Internal team meeting on project progress",
-    maxHours: 70,
-  },
+import { getAllTimes, stopTime } from "@/lib/actions/time.actions";
+import LiveTimer from "./LiveTimer";
 
-  {
-    id: "8y5xn0kl",
-    userName: "Michael Chen",
-    clientName: "Tech Startup HQ",
-    projectName: "Open Office Layout",
-    userMail: "michael.chen@techstartup.com",
-    hours: 1,
-    checkInTime: "2024-09-19T17:00:00.000Z",
-    checkOutTime: "2024-09-19T18:00:00.000Z",
-    description: "Internal team meeting on project progress",
-    maxHours: 15,
-  },
-  {
-    id: "4p3w06t2",
-    userName: "Olivia Smith",
-    clientName: "Historic Preservation Society",
-    projectName: "Building Restoration",
-    userMail: "[email address removed]",
-    hours: 6,
-    checkInTime: "2024-09-17T09:00:00.000Z",
-    checkOutTime: "2024-09-17T15:00:00.000Z",
-    description: "Researching historical building codes and materials",
-    maxHours: 100,
-  },
-  {
-    id: "7z6q18n5",
-    userName: "Daniel Lee",
-    clientName: "Luxury Condominium Developer",
-    projectName: "Interior Design",
-    userMail: "daniel.lee@luxurycondo.com",
-    hours: 3,
-    checkInTime: "2024-09-20T11:00:00.000Z",
-    checkOutTime: "2024-09-20T14:00:00.000Z",
-    description: "Selecting furniture and finishes for model unit",
-    maxHours: 40,
-  },
-  {
-    id: "2x9y07t4",
-    userName: "Ava Johnson",
-    clientName: "Sustainable Living Center",
-    projectName: "Green Building Design",
-    userMail: "[email address removed]",
-    hours: 5,
-    checkInTime: "2024-09-18T10:00:00.000Z",
-    checkOutTime: "2024-09-18T15:00:00.000Z",
-    description: "Calculating energy efficiency and environmental impact",
-    maxHours: 80,
-  },
-  {
-    id: "5w8e19n3",
-    userName: "Ethan Brown",
-    clientName: "Educational Institution",
-    projectName: "Classroom Layout",
-    userMail: "ethan.brown@education.edu",
-    hours: 2,
-    checkInTime: "2024-09-20T15:00:00.000Z",
-    checkOutTime: "2024-09-20T17:00:00.000Z",
-    description: "Meeting with teachers to discuss classroom needs",
-    maxHours: 20,
-  },
-];
 
 export type TimeSchema = {
-  id: string;
-  userName: string;
-  userMail: string;
-  clientName: string;
-  projectName: string;
+  _id: string;
+  project:{
+    _id:string;
+    client:string;
+    project:string;
+    maxTime:number;
+  };
+  user:{
+    _id:string;
+    username:string;
+    email:string;
+  };
   hours: number;
   checkInTime: string;
   checkOutTime: string;
   description: string;
-  maxHours: number;
+  __v:number;
 };
 
-export const columns: ColumnDef<TimeSchema>[] = [
-  {
-    accessorKey: "clientName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-white font-bold justify-center"
-        >
-          Client
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="capitalize text-center">{row.getValue("clientName")}</div>
-    ),
-  },
-  {
-    accessorKey: "projectName",
-    header: () => (
-      <div className="text-center font-bold text-white">Project</div>
-    ),
-    cell: ({ row }) => (
-      <div className="text-center">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger className="text-white">
-              {row.getValue("hours")}
-            </TooltipTrigger>
-
-            <TooltipContent>
-              <p>
-                <span className="font-bold">Total alotted:</span>{" "}
-                {row.original.maxHours} hrs
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "userMail",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-white font-bold"
-        >
-          User Mail
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-center font-medium lowercase">
-        {row.getValue("userMail")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "userName",
-    header: () => <div className="text-center font-bold text-white">User</div>,
-    cell: ({ row }) => (
-      <div className="text-center font-medium">{row.getValue("userName")}</div>
-    ),
-  },
-  {
-    accessorKey: "checkInTime",
-    header: () => <div className="text-center font-bold text-white">date</div>,
-    cell: ({ row }) => (
-      <div className="text-center font-medium lowercase">
-        {new Date(row.original.checkInTime).toLocaleString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        })}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "hours",
-    header: () => <div className="text-center font-bold text-white">Hours</div>,
-    cell: ({ row }) => (
-      <div className="text-center">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger className="text-white">
-              {row.getValue("hours")}
-            </TooltipTrigger>
-
-            <TooltipContent>
-              <p>
-                <span className="font-bold">Start Time:</span>{" "}
-                {new Date(row.original.checkInTime).toLocaleString("en-US", {
-                  hour: "numeric",
-                })}
-              </p>
-
-              <p>
-                <span className="font-bold">End Time: </span>{" "}
-                {new Date(row.original.checkOutTime).toLocaleString("en-US", {
-                  hour: "numeric",
-                })}
-              </p>
-              <p className="w-72">
-                <span className="font-bold">Description:</span>{" "}
-                {row.original.description}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    ),
-  },
-];
 
 export function TimeTableAdmin() {
-  const [csvData, setCSVData] = React.useState(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -324,6 +78,150 @@ export function TimeTableAdmin() {
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
+  const [data,setData]=React.useState<TimeSchema[]>([]);
+  const getTimes=async ()=>{
+    const allTimes:TimeSchema[]= await getAllTimes();
+    setData(allTimes);
+  }
+  React.useEffect(()=>{
+    getTimes();
+  },[])
+  const columns: ColumnDef<TimeSchema>[] = [
+    {
+      accessorKey: "client",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="text-white font-bold justify-center"
+          >
+            Client
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="capitalize text-center">{row.getValue("project").client}</div>
+      ),
+    },
+    {
+      accessorKey: "project",
+      header: () => (
+        <div className="text-center font-bold text-white">Project</div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className="text-white">
+                {row.getValue("project").project}
+              </TooltipTrigger>
+  
+              <TooltipContent>
+                <p>
+                  <span className="font-bold">Total alotted:</span>{" "}
+                  {row.original.project.maxTime} hrs
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "userMail",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="text-white font-bold"
+          >
+            User Mail
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="text-center font-medium lowercase">
+          {row.original.user.email}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "user",
+      header: () => <div className="text-center font-bold text-white">User</div>,
+      cell: ({ row }) => (
+        <div className="text-center font-medium">{row.getValue("user").username}</div>
+      ),
+    },
+    {
+      accessorKey: "checkInTime",
+      header: () => <div className="text-center font-bold text-white">date</div>,
+      cell: ({ row }) => (
+        <div className="text-center font-medium lowercase">
+          {new Date(row.original.checkInTime).toLocaleString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "hours",
+      header: () => <div className="text-center font-bold text-white">Hours</div>,
+      cell: ({ row }) => (
+        <div className="text-center">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className="text-white">
+              {row.getValue("hours")===0?(
+                  <LiveTimer checkInTime={row.original.checkInTime}/>):(
+                    row.getValue("hours")
+                )}
+              </TooltipTrigger>
+  
+              <TooltipContent>
+                <p>
+                  <span className="font-bold">Start Time:</span>{" "}
+                  {new Date(row.original.checkInTime).toLocaleString("en-US", {
+                    hour: "numeric",
+                  })}
+                </p>
+  
+                <p>
+                  <span className="font-bold">End Time: </span>{" "}
+                  {row.original.checkOutTime?new Date(row.original.checkOutTime).toLocaleString("en-US", {
+                    hour: "numeric",
+                  }):"Not ended"}
+                </p>
+                <p className="w-72">
+                  <span className="font-bold">Description:</span>{" "}
+                  {row.original.description}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        return (
+          row.original.hours===0? (
+          <Button variant="ghost" className="h-8 w-8 p-0" onClick={()=>stop(row.original._id)}>
+                <CircleStop className="h-4 w-4" />
+              </Button>):(<></>)
+          
+        )
+      },
+    },
+  ];
   const table = useReactTable({
     data,
     columns,
@@ -352,12 +250,32 @@ export function TimeTableAdmin() {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
+  const stop=async (timeId:string)=>{
+    const stoppedTime=await stopTime(timeId);
+    stoppedTime && getTimes()
+  }
   const handleSelectDate = (date: Date) => {
+    if(date>new Date()){
+      alert("Start date cannot be a future date.");
+      return;
+    }
+    if(endDate && date>endDate){
+      alert("Start date cannot be later than end date.");
+      return;
+    }
     setIsCalendarOpen(false);
     setStartDate(date);
   };
 
   const handleSelectEndDate = (date: Date) => {
+    if(date> new Date()){
+      alert("End date cannot be a future date.");
+      return;
+    }
+    if(startDate && date<startDate){
+      alert("End date cannot be earlier than Start date.");
+      return;
+    }
     setIsCalendarOpen(false);
     setEndDate(date);
   };
@@ -369,7 +287,7 @@ export function TimeTableAdmin() {
     const workbook = new XLSX.Workbook();
     const sheet = workbook.addWorksheet("TimeSheet");
     const columns = [
-      " Client",
+      "Client",
       "Project",
       "Max Hours",
       "Description",
@@ -380,11 +298,11 @@ export function TimeTableAdmin() {
     sheet.addRow(columns);
     table.getFilteredRowModel().rows.forEach((row) => {
       sheet.addRow([
-        row.original.clientName,
-        row.original.projectName,
-        row.original.maxHours,
+        row.original.project.client,
+        row.original.project.project,
+        row.original.project.maxTime,
         row.original.description,
-        row.original.userName,
+        row.original.user.username,
         new Date(row.original.checkInTime).toLocaleString("en-US", {
           weekday: "long",
           month: "long",
@@ -399,7 +317,6 @@ export function TimeTableAdmin() {
       const blob = new Blob([buffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-      setCSVData(blob);
       const url = window.URL.createobjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -459,27 +376,31 @@ export function TimeTableAdmin() {
             />
           </PopoverContent>
         </Popover>
+        <Button variant="outline" className="w-1/4 text-black" onClick={()=>{
+        setStartDate(null);
+        setEndDate(null);
+      }}>Reset Dates</Button>
       </div>
       <div className="flex items-center py-4">
-        <span className="pr-4">Search Client:-</span>
+        <span className="pr-4">Search Project:-</span>
         <Input
-          placeholder="Filter client..."
+          placeholder="Filter project..."
           value={
-            (table.getColumn("clientName")?.getFilterValue() as string) ?? ""
+            (table.getColumn("project")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("clientName")?.setFilterValue(event.target.value)
+            table.getColumn("project")?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-black"
         />
         <span className="pl-5 pr-4">Search User:-</span>
         <Input
-          placeholder="Filter emails..."
+          placeholder="Filter user..."
           value={
-            (table.getColumn("userMail")?.getFilterValue() as string) ?? ""
+            (table.getColumn("user")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("userMail")?.setFilterValue(event.target.value)
+            table.getColumn("user")?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-black mr-8"
         />
@@ -540,7 +461,14 @@ export function TimeTableAdmin() {
           {table
             .getFilteredRowModel()
             .rows.reduce((total, row) => total + row.original.hours, 0)}
-            <Button variant="outline" size="sm" className="ml-4 text-black" onClick={downloadExcel}>DownLoad</Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-4 text-black"
+            onClick={downloadExcel}
+          >
+            DownLoad
+          </Button>
         </div>
         <div className="space-x-2 text-black">
           <Button
