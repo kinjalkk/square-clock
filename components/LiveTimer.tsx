@@ -1,9 +1,9 @@
-import React, { useEffect, usestate } from "react";
+import React, { useEffect, useState } from "react";
 interface LiveTimerProps {
   checkInTime: string;
 }
 const LiveTimer: React.FC<LiveTimerProps> = ({ checkInTime }) => {
-  const [currentTime, setCurrentTime] = usestate(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
   useEffect(() => {
     const timerId = setInterval(() => {
       setCurrentTime(new Date());
