@@ -57,7 +57,7 @@ const Page = () => {
         if (userLogin && !userLogin?.ok) {
           setInvalidCredentails(true);
         } else {
-          window.location.href="/";
+          router.push("/");
         }
       } catch (error) {
         console.log("error:", error);

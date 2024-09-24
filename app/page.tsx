@@ -1,16 +1,16 @@
-
+"use client"
 import SignedOut from "@/components/SignedOut";
 import React from "react";
 import { getServerSession, Session } from "next-auth";
 import TimeSheet from "@/components/TimeSheet";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import { useSession } from "next-auth/react";
 
-const Home = async() => {
-  const session:Session | null = await getServerSession(authOptions);
-
+const Home = () => {
+  const {data:session,status}=useSession();
   return (
     <div className="w-full relative">
-      <div className="bg-black lg:bg-opacity-50 min-h-screen w-full min-h-screen flex justify-center">
+      <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
       {session && (
         <>
         <TimeSheet session={session}/>

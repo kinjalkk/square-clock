@@ -55,7 +55,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
   }
   useEffect(() => {
     if (session) {
-      fetchTimes()
+      fetchTimes();
     }
   },[session,startDate,endDate]);
   const start = async () => {

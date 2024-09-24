@@ -70,7 +70,7 @@ const Page = () => {
     <div className='w-full relative bg-no-repeat bg-center bg-cover'>
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] py-[4rem]">
-          <h1 className="text-[2rem] font-bold">change password</h1>
+          <h1 className="text-[1.8rem] font-bold">change password</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
               <FormField
