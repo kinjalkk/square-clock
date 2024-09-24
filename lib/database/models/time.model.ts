@@ -29,11 +29,11 @@ const timeSchema = new mongoose.Schema({
 timeSchema.pre("save",function(next){
     if(this.checkOutTime && this.checkInTime){
         const time:any=this;
-        const hours=(time.checkOutTime-time.checkInTime)/1000/60/60; 
-        if(hours>8){
+        const hours=((time.checkOutTime-time.checkInTime)/1000/60/60).toFixed(2); 
+        if(parseFloat(hours)>8){
             time.hours=8;
         } else{
-            time.hours=hours
+            time.hours=parseFloat(hours)
         }
     }
     next()

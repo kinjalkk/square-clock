@@ -19,7 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
 import { useSession } from "next-auth/react";
-import { getTime, reportTime } from "@/lib/actions/time.actions";
+import { checkActiveTime, getTime, startTime, stopTime } from "@/lib/actions/time.actions";
 import { TimeTable } from "./TimeTable";
 const TimeSheet = () => {
   const router = useRouter();
@@ -48,22 +48,31 @@ const TimeSheet = () => {
       setProjects(projectsFormDb);
     })();
   }, [selectedClient]);
+  const fetchTimes= async () => {
+    const times = await getTime(session.data.user.id);
+    setAllTimes(times);
+  }
   useEffect(() => {
-    (async () => {
-      if (session.status==="authenticated") {
-        const times = await getTime(session.data.user.id);
-        setAllTimes(times);
-      }
-    })();
+    if (session.status==="authenticated") {
+      fetchTimes()
+    }
   },[session.status]);
   const start = async () => {
-    const startedTime = await reportTime(
+    const startedTime = await startTime(
       session.data?.user.id,
       selectedProject._id,
-      true,
       description,
     );
+    setSelectedClient("");
+    setSelectedProject("");
+    setDescription("");
+    if(startedTime) fetchTimes();
   };
+
+  const stop = async (timeId:string)=>{
+    const stoppedTime= await stopTime(timeId);
+    if(stoppedTime) fetchTimes();
+  }
 
   return (
     <>
@@ -97,9 +106,14 @@ const TimeSheet = () => {
                       <CommandItem
                         key={client}
                         value={client}
-                        onSelect={(currentValue) => {
+                        onSelect={async (currentValue) => {
+                          const onGoingTime=await checkActiveTime(session.data?.user.id);
+                          if(onGoingTime){
+                            setOpen(false);
+                            alert("You have already started a time");
+                            return
+                          }
                           setSelectedClient(currentValue);
-
                           setOpen(false);
                         }}
                       >
@@ -191,7 +205,7 @@ const TimeSheet = () => {
             </>
           )}
         </div>
-        <TimeTable/>
+        <TimeTable stop={stop} times={alltimes}/>
       </div>
     </>
   );
