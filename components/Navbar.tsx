@@ -44,10 +44,16 @@ const Navbar = ({session}:{session:any}) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={() => router.push("/reset-password")}
+                onClick={() => router.push(`${session?.isAdmin?"/reset-password-admin":"/reset-password"}`)}
               >
                 change password
               </DropdownMenuItem>
+              {session.isAdmin && <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => router.push("/time-table-admin")}
+              >
+                Time Table
+              </DropdownMenuItem>}
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={async () => {await signOut();window.location.href="/"}}

@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {  updatePassword } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const resetPasswordSchema = z.object({
   password: z.string().min(3, {
@@ -26,7 +27,7 @@ const resetPasswordSchema = z.object({
 
 
 const Page = () => {
-
+  const session=useSession();
   const [invalidCredentials, setInvalidCredentails] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -42,7 +43,12 @@ const Page = () => {
       setInvalidCredentails(true);
     } else {
       try {
-        const changePassword = await updatePassword("kinjalchowdhury20@gmail.com",values.password);
+        const email=session?.data?.user?.email;
+        if(!email){
+          setInvalidCredentails(true);
+          return;
+        }
+        const changePassword = await updatePassword(email,values.password);
         if (!changePassword) {
           setInvalidCredentails(true);
         } else {
@@ -57,7 +63,10 @@ const Page = () => {
   const handleKeyUp = () => {
     setInvalidCredentails(false);
   };
-
+  if(session.status==="unauthenticated"){
+    router.push("/");
+    return null;
+  }
   return (
     <div className=' w-full relative bg-no-repeat bg-center bg-cover'>
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">

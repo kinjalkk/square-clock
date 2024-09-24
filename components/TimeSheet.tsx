@@ -18,17 +18,14 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
-import { useSession } from "next-auth/react";
 import { checkActiveTime, getTime,getTimeByDateRangeUser, startTime, stopTime } from "@/lib/actions/time.actions";
 import { TimeSchemaUser,TimeTable } from "./TimeTable";
-const TimeSheet = () => {
+const TimeSheet:React.FC<any = ({session}) => {
   const router = useRouter();
-  const session = useSession();
-  console.log("session", session);
   const [clients, setClients] = React.useState([]);
   const [projects, setProjects] = React.useState([]);
   const [selectedClient, setSelectedClient] = React.useState("");
-  const [selectedProject, setSelectedProject] = React.useState("");
+  const [selectedProject, setSelectedProject] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
   const [alltimes, setAllTimes] = React.useState<TimeSchemaUser[]>([]);
@@ -38,39 +35,37 @@ const TimeSheet = () => {
   useEffect(() => {
     (async () => {
       const clientsFormDb = await getAllClients();
-      console.log("clients", clientsFormDb);
       setClients(clientsFormDb);
     })();
   }, []);
   useEffect(() => {
     (async () => {
       const projectsFormDb = await getAllProjects(selectedClient);
-      console.log("projects", projectsFormDb);
       setProjects(projectsFormDb);
     })();
   }, [selectedClient]);
   const fetchTimes= async () => {
     let times:TimeSchemaUser[];
     if(startDate && endDate){
-      times = await getTimeByDateRangeUser(startDate,endDate,session.data?.user.id);
+      times = await getTimeByDateRangeUser(startDate,endDate,session?.data?.user.id);
     }else{
-      times = await getTime(session.data.user.id);
+      times = await getTime(session?.data?.user?.id);
     }
     setAllTimes(times);
   }
   useEffect(() => {
-    if (session.status==="authenticated") {
+    if (session) {
       fetchTimes()
     }
-  },[session.status,startDate,endDate]);
+  },[session,startDate,endDate]);
   const start = async () => {
     const startedTime = await startTime(
-      session.data?.user.id,
+      session?.user?.id,
       selectedProject._id,
       description,
     );
     setSelectedClient("");
-    setSelectedProject("");
+    setSelectedProject(null);
     setDescription("");
     if(startedTime) fetchTimes();
   };
@@ -113,7 +108,7 @@ const TimeSheet = () => {
                         key={client}
                         value={client}
                         onSelect={async (currentValue) => {
-                          const onGoingTime=await checkActiveTime(session.data?.user.id);
+                          const onGoingTime=await checkActiveTime(session?.user?.id);
                           if(onGoingTime){
                             setOpen(false);
                             alert("You have already started a time");
@@ -122,6 +117,7 @@ const TimeSheet = () => {
                           setSelectedClient(currentValue);
                           setOpen(false);
                         }}
+                        className="capitalize"
                       >
                         <Check
                           className-={cn(
@@ -179,6 +175,7 @@ const TimeSheet = () => {
                             setSelectedProject(projectSelected);
                             setOpenProject(false);
                           }}
+                          className="capitalize"
                         >
                           <Check
                             className={cn(

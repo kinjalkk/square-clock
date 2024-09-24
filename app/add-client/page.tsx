@@ -15,6 +15,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { createNewProject, getProject } from "@/lib/actions/project.actions";
+import { useSession } from "next-auth/react";
 
 const projectSchema = z.object({
   client: z.string().min(1, {
@@ -28,7 +29,7 @@ const projectSchema = z.object({
 
 
 const Page = () => {
-
+  const session=useSession();
   const [isProjectExist, setIsProjectExist] = useState(false);
   const [invalidCredentials, setInvalidCredentails] = useState(false);
   const router = useRouter();
@@ -41,9 +42,7 @@ const Page = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof projectSchema>) {
-    console.log("hours",parseInt(values.hours));
-    
+  async function onSubmit(values: z.infer<typeof projectSchema>) {    
     if(isNaN(parseInt(values.hours))){
       setInvalidCredentails(true);
       return false;
@@ -56,7 +55,7 @@ const Page = () => {
           
           //create project and route push /
           const createProject= await createNewProject(values.client,values.project,parseInt(values.hours))
-          console.log("project created");
+          router.push("/");
           
         } catch (error) {
           console.log("error:", error);
@@ -69,6 +68,11 @@ const Page = () => {
     setIsProjectExist(false);
     setInvalidCredentails(false);
   };
+
+  if(session.status==="unauthenticated"){
+    router.push("/");
+    return
+  }
 
   return (
     <div className=' w-full relative'>

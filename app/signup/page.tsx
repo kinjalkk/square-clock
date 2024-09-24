@@ -48,9 +48,7 @@ const Page = () => {
   });
   const router= useRouter();
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log("submit called");
-    
+  async function onSubmit(values: z.infer<typeof loginSchema>) {    
     const userByEmail = await getUserByEmail(values.email);
     const userByUsername = await getUserByUsername(values.username);
     if (userByEmail) {
@@ -58,7 +56,6 @@ const Page = () => {
     } else if (userByUsername) {
       setUsernameExist(true);
     } else {
-      console.log("inside else");
       const registered = await registerUser(
         values.email,
         values.password,

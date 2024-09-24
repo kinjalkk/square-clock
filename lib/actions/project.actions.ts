@@ -13,10 +13,10 @@ export async function getProject(
     const projectFound = await Project.findOne({
       $and: [
         {
-          client: client,
+          client: {$regex: new RegExp(`^${client}$`,"i")},
         },
         {
-          project: project,
+          project: {$regex: new RegExp(`^${project}$`,"i")},
         },
       ],
     });
@@ -40,8 +40,8 @@ export async function createNewProject(
     }
 
     const newProject = await Project.create({
-      client: client,
-      project: project,
+      client: client.charAt(0).toUpperCase()+client.slice(1).toLowerCase(),
+      project: project.charAt(0).toUpperCase()+project.slice(1).toLowerCase(),
       maxTime: hours,
     });
 
