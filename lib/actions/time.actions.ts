@@ -57,7 +57,7 @@ export async function getTime(userId: string) {
             ...t.toObject(),
             projectClient:project?.client,
             projectName:project?.project,
-            projectMaxTime:project?.maxtime,
+            projectMaxTime:project?.maxTime,
           }
         })
       )
@@ -82,7 +82,7 @@ export async function getAllTimes() {
             ...t.toObject(),
             projectClient:project?.client,
             projectName:project?.project,
-            projectMaxTime:project?.maxtime,
+            projectMaxTime:project?.maxTime,
             userName:user?.username,
             userEmail:user?.email,
           }
@@ -109,7 +109,7 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
             ...t.toObject(),
             projectClient:project?.client,
             projectName:project?.project,
-            projectMaxTime:project?.maxtime,
+            projectMaxTime:project?.maxTime,
             userName:user?.username,
             userEmail:user?.email,
           }
