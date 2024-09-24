@@ -47,9 +47,9 @@ const TimeSheet:React.FC<any> = ({session}) => {
   const fetchTimes= async () => {
     let times:TimeSchemaUser[];
     if(startDate && endDate){
-      times = await getTimeByDateRangeUser(startDate,endDate,session?.data?.user.id);
+      times = await getTimeByDateRangeUser(startDate,endDate,session?.user.id);
     }else{
-      times = await getTime(session?.data?.user?.id);
+      times = await getTime(session?.user?.id);
     }
     setAllTimes(times);
   }
