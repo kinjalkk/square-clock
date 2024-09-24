@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
 import { checkActiveTime, getTime,getTimeByDateRangeUser, startTime, stopTime } from "@/lib/actions/time.actions";
 import { TimeSchemaUser,TimeTable } from "./TimeTable";
-const TimeSheet:React.FC<any = ({session}) => {
+const TimeSheet:React.FC<any> = ({session}) => {
   const router = useRouter();
   const [clients, setClients] = React.useState([]);
   const [projects, setProjects] = React.useState([]);
