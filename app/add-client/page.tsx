@@ -24,7 +24,7 @@ const projectSchema = z.object({
   project: z.string().min(1, {
     message: "Enter valid project"
   }),
-  hours:z.string()
+  hours:z.string().default("0")
 });
 
 

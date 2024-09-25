@@ -16,22 +16,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
-import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
-import { checkActiveTime, getTime,getTimeByDateRangeUser, startTime, stopTime } from "@/lib/actions/time.actions";
-import { TimeSchemaUser,TimeTable } from "./TimeTable";
-const TimeSheet:React.FC<any> = ({session}) => {
-  const router = useRouter();
+import { getAllClients, getAllProjects ,updateProject} from "@/lib/actions/project.actions";
+const UpdateProject:React.FC<any> = ({refreshTime}) => {
   const [clients, setClients] = React.useState([]);
-  const [projects, setProjects] = React.useState([]);
+  const [projects, setProjects] = React.useState<any[]>([]);
   const [selectedClient, setSelectedClient] = React.useState("");
-  const [selectedProject, setSelectedProject] = React.useState();
+  const [selectedProject, setSelectedProject] = React.useState<any|null>();
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
-  const [alltimes, setAllTimes] = React.useState<TimeSchemaUser[]>([]);
-  const [description,setDescription]=React.useState("")
-  const [startDate, setStartDate] = React.useState<Date | null>(null);
-  const [endDate, setEndDate] = React.useState<Date | null>(null);
+  const [hours, setHours] = React.useState<number>(0);
   useEffect(() => {
     (async () => {
       const clientsFormDb = await getAllClients();
@@ -44,43 +37,27 @@ const TimeSheet:React.FC<any> = ({session}) => {
       setProjects(projectsFormDb);
     })();
   }, [selectedClient]);
-  const fetchTimes= async () => {
-    let times:TimeSchemaUser[];
-    if(startDate && endDate){
-      times = await getTimeByDateRangeUser(startDate,endDate,session?.user.id);
-    }else{
-      times = await getTime(session?.user?.id);
-    }
-    setAllTimes(times);
-  }
-  useEffect(() => {
-    if (session) {
-      fetchTimes();
-    }
-  },[session,startDate,endDate]);
-  const start = async () => {
-    const startedTime = await startTime(
-      session?.user?.id,
-      selectedProject._id,
-      description,
-    );
+  const update = async () => {
+
+    if(selectedProject && hours && hours>0){
+        const update=await updateProject(selectedProject?._id,hours);
+    
     setSelectedClient("");
     setSelectedProject(null);
-    setDescription("");
-    if(startedTime) fetchTimes();
+    setHours(0);
+   refreshTime();
+    } else{
+        alert("please provide correct values")
+    }
   };
 
-  const stop = async (timeId:string)=>{
-    const stoppedTime= await stopTime(timeId);
-    if(stoppedTime) fetchTimes();
-  }
 
   return (
 
-      <div className="w-[80%]">
-        <div className="mx-auto gap-6 flex flex-row items-center max-sm:ml-4">
+<>
           <div className="flex">
-          <h1 className="text-xl text-white mr-4"> Start Work:- </h1>
+          <h1 className="text-xl text-white mr-4"> Update Project:- </h1>
+          <div className="gap-6 flex flex-row items-center max-sm:ml-4 justify-center text-black">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -110,12 +87,6 @@ const TimeSheet:React.FC<any> = ({session}) => {
                         key={client}
                         value={client}
                         onSelect={async (currentValue) => {
-                          const onGoingTime=await checkActiveTime(session?.user?.id);
-                          if(onGoingTime){
-                            setOpen(false);
-                            alert("You have already started a time");
-                            return
-                          }
                           setSelectedClient(currentValue);
                           setOpen(false);
                         }}
@@ -138,7 +109,6 @@ const TimeSheet:React.FC<any> = ({session}) => {
               </Command>
             </PopoverContent>
           </Popover>
-          </div>
         
           {selectedClient && (
             <Popover open={openProject} onOpenChange={setOpenProject}>
@@ -170,11 +140,12 @@ const TimeSheet:React.FC<any> = ({session}) => {
                       {projects.map((project) => (
                         <CommandItem
                           key={project?.project}
-                          value={projects?.project}
+                          value={project?.project}
                           onSelect={(currentValue) => {
                             const projectSelected = projects.find(
-                              (p) => project.project === currentValue
+                              (p) => project?.project === currentValue
                             );
+                            setHours(projectSelected?.maxTime);
                             setSelectedProject(projectSelected);
                             setOpenProject(false);
                           }}
@@ -201,19 +172,28 @@ const TimeSheet:React.FC<any> = ({session}) => {
 
           {selectedProject && selectedClient && (
             <>
-            <textarea
-            className="border rounded-md p-2 w-full"
-            placeholder="Enter description"
-            value={description}
-            onChange={(e)=>setDescription(e.target.value)}
-            />
-            <Button onClick={start}>Start</Button>
+            <div className="flex">
+                <label
+                    htmlFor="hours"
+                    className="text-white mr-4 flex items-center"
+                    >
+                        Hours
+                    </label>
+                    <input
+                    type="number"
+                    id="hours"
+                    name="hours"
+                    className="w-[200px] p-2 border border-gray-300 rounded"
+                    value={hours}
+                    onChange={e=>setHours(e.target.value)}
+                    />
+            </div>
+            <Button onClick={update}>Update</Button>
             </>
           )}
         </div>
-        <h1 className="text-2xl font-bold mt-8 text-white underline flex justify-center">TimeSheet</h1>
-        <TimeTable stop={stop} times={alltimes} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
-      </div>
+        </div>
+        </>
   );
 };
-export default TimeSheet;
+export default UpdateProject;

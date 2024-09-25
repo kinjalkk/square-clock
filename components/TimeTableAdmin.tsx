@@ -40,6 +40,7 @@ import { CalendarIcon } from "lucide-react";
 import * as XLSX from "exceljs";
 import { getAllTimes,getTimeByDateRange, stopTime } from "@/lib/actions/time.actions";
 import LiveTimer from "./LiveTimer";
+import UpdateProject from "./UpdateProject";
 
 
 export type TimeSchema = {
@@ -329,6 +330,8 @@ export function TimeTableAdmin() {
   return (
     <div className="w-full text-white">
       <div className="flex justify-between pt-8">
+        <UpdateProject refreshTime={getTimes}/>
+        <h1 className="text-2xl font-bold mt-4 text-white underline flex justify-center">TimeSheet</h1>
         <Popover open={isPickUpStartOpen} onOpenChange={setIsPickUpStartOpen}>
           <PopoverTrigger asChild>
             <Button

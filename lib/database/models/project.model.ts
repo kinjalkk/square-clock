@@ -12,6 +12,7 @@ const projectSchema = new mongoose.Schema({
     },
     maxTime:{
         type:Number,
+        default:0,
     }
     
 })

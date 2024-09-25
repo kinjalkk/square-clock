@@ -85,3 +85,20 @@ export async function getAllClients() {
     console.log("project.actions: Error fetching clients", error);
   }
 }
+
+export async function updateProject(projectId:string,hours:number) {
+  try {
+    connectToDB();
+    const updateProject = await Project.findByIdAndUpdate(projectId,{
+      maxTime:hours,
+    });
+    if (updateProject) {
+      return JSON.parse(JSON.stringify(updateProject));
+    } else {
+      console.log("Error updating project");
+    }
+  } catch (error) {
+    console.log("project.actions: Error updating project", error);
+  }
+  return false;
+}
