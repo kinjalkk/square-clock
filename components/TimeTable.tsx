@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, CircleStop, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, CircleStop } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -255,8 +255,8 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
         <PopoverContent className={`w-auto p-0`}>
           <Calendar
             mode="single"
-            selected={startDate}
-            onSelect={(date) => handleSelectDate(date)}
+            selected={startDate ?? undefined}
+            onSelect={(date) =>date && handleSelectDate(date)}
             initialFocus
           />
         </PopoverContent>
@@ -272,8 +272,8 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
         <PopoverContent className={`w-auto p-0 `}>
           <Calendar
             mode="single"
-            selected={endDate}
-            onSelect={(date) => handleSelectEndDate(date)}
+            selected={endDate ?? undefined}
+            onSelect={(date) => date && handleSelectEndDate(date)}
             initialFocus
           />
         </PopoverContent>

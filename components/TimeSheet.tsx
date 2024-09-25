@@ -23,9 +23,9 @@ import { TimeSchemaUser,TimeTable } from "./TimeTable";
 const TimeSheet:React.FC<any> = ({session}) => {
   const router = useRouter();
   const [clients, setClients] = React.useState([]);
-  const [projects, setProjects] = React.useState([]);
+  const [projects, setProjects] = React.useState<any>([]);
   const [selectedClient, setSelectedClient] = React.useState("");
-  const [selectedProject, setSelectedProject] = React.useState();
+  const [selectedProject, setSelectedProject] = React.useState<any>();
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
   const [alltimes, setAllTimes] = React.useState<TimeSchemaUser[]>([]);
@@ -151,7 +151,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
                 >
                   {selectedProject?.project
                     ? projects?.find(
-                        (project) =>
+                        (project:any) =>
                           project?.project === selectedProject?.project
                       )?.project
                     : "Select project..."}
@@ -167,13 +167,13 @@ const TimeSheet:React.FC<any> = ({session}) => {
                     <CommandEmpty>No project found.</CommandEmpty>
 
                     <CommandGroup>
-                      {projects.map((project) => (
+                      {projects.map((project:any) => (
                         <CommandItem
                           key={project?.project}
-                          value={projects?.project}
+                          value={project?.project}
                           onSelect={(currentValue) => {
                             const projectSelected = projects.find(
-                              (p) => project.project === currentValue
+                              (p:any) => p.project === currentValue
                             );
                             setSelectedProject(projectSelected);
                             setOpenProject(false);

@@ -30,7 +30,7 @@ const resetPasswordAdminSchema = z.object({
 
 
 const Page = () => {
-  const session=useSession();
+  const session:any=useSession();
   const [invalidCredentials, setInvalidCredentails] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof resetPasswordAdminSchema>>({

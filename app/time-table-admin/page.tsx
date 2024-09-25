@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Page = () => {
-  const session=useSession();
+  const session:any=useSession();
   const router=useRouter();
   if(session.status==="unauthenticated" || (session.status==="authenticated" && session.data.isAdmin===false)){
     router.push("/");

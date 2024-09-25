@@ -6,15 +6,9 @@ import Navbar from "./Navbar";
 
 const AuthWrapper = ({ children }: { children: any }) => {
   const { data: session, status } = useSession(); 
-  // const [oldStatus, setOldStatus] = useState("");
-  // const router = useRouter();
-  // const pathname = usePathname()
-  // useEffect(() => {
-  //   if (oldStatus == "authenticated" && status == "unauthenticated") {
-  //     router.push("/");
-  //   }
-  //   setOldStatus(status);
-  // }, [status]);
+  if(status==="loading"){
+    return <div className="text-white">Loading.....</div>
+  }
   return <>
   <SessionContext.Provider value={JSON.stringify(session)}>
     {session &&  <Navbar session={session}/>}

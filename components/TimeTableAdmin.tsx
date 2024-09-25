@@ -351,8 +351,8 @@ export function TimeTableAdmin() {
           >
             <Calendar
               mode="single"
-              selected={startDate}
-              onSelect={(date) => handleSelectDate(date)}
+              selected={startDate ?? undefined}
+              onSelect={(date) => date && handleSelectDate(date)}
               initialFocus
             />
           </PopoverContent>
@@ -373,8 +373,8 @@ export function TimeTableAdmin() {
           >
             <Calendar
               mode="single"
-              selected={endDate}
-              onSelect={(date) => handleSelectEndDate(date)}
+              selected={endDate ?? undefined}
+              onSelect={(date) => date && handleSelectEndDate(date)}
               initialFocus
             />
           </PopoverContent>

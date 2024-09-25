@@ -185,7 +185,7 @@ const UpdateProject:React.FC<any> = ({refreshTime}) => {
                     name="hours"
                     className="w-[200px] p-2 border border-gray-300 rounded"
                     value={hours}
-                    onChange={e=>setHours(e.target.value)}
+                    onChange={e=>setHours(Number(e.target.value))}
                     />
             </div>
             <Button onClick={update}>Update</Button>
