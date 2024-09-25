@@ -329,9 +329,9 @@ export function TimeTableAdmin() {
   };
   return (
     <div className="w-full text-white">
-      <div className="flex justify-between pt-8">
         <UpdateProject refreshTime={getTimes}/>
         <h1 className="text-2xl font-bold mt-4 text-white underline flex justify-center">TimeSheet</h1>
+      <div className="flex justify-between pt-8">
         <Popover open={isPickUpStartOpen} onOpenChange={setIsPickUpStartOpen}>
           <PopoverTrigger asChild>
             <Button
