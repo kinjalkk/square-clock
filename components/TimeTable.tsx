@@ -284,7 +284,7 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
       }}>Reset Dates</Button>
     </div>
       <div className="flex items-center py-4">
-        <span className="pr-4">Search Client:-</span>
+        <span className="pr-4">Search Project:-</span>
         <Input
           placeholder="Filter Project..."
           value={
