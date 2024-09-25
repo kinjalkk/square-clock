@@ -66,14 +66,14 @@ const SignedOut = () => {
                 <p className="font-medium">Empower Collaboration</p>
                 <p>
                   Time logs enable seamless collaboration, ensuring every team
-                  member's contributions align toward shared goals.
+                  member&apos;s contributions align toward shared goals.
                 </p>
               </li>
               <li className="mb-1">
                 <p className="font-medium">Build Your Legacy</p>
                 <p>
-                  With clear visibility of your work, you're not just logging
-                  hours, you're building a portfolio of achievement.
+                  With clear visibility of your work, you&apos;re not just logging
+                  hours, you&apos;re building a portfolio of achievement.
                 </p>
               </li>
             </ol>
