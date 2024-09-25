@@ -12,7 +12,7 @@ const Page = () => {
     return;
   }
   return (
-    <div className="w-[80%] m-auto">
+    <div className="w-[80%] m-auto mt-4">
       <TimeTableAdmin />
     </div>
   );

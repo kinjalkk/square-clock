@@ -10,11 +10,13 @@ import {
 import { IoIosLogOut } from "react-icons/io";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 const Navbar = ({session}:{session:any}) => {
   const router= useRouter()
   return (
     <>
-      <div className="mx-[2rem] max-sm:mx-[0.5rem] py-4 px-2 flex flex-row items-center sticky z-10">
+      <div className="mx-[2rem] max-sm:mx-[0.5rem] py-4 px-2 flex flex-row items-center sticky z-10 top-0 bg-[#0f1014]">
+        <Link className="cursor-pointer flex  align-middle items-center" href="/">
         <Image
           src="/images/logo.png"
           alt="logo"
@@ -22,7 +24,7 @@ const Navbar = ({session}:{session:any}) => {
           width={0}
           className="h-10 w-auto"
           unoptimized
-        /><h2 className="text-lg text-white pl-5">Square Clock</h2>
+        /><h2 className="text-lg text-white pl-5">Square Clock</h2></Link>
 
         <div className="text-white ml-[auto] gap-6 flex flex-row mr-[1rem] items-center max-sm:ml-4">
           {session && <DropdownMenu>
