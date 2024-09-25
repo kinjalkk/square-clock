@@ -385,7 +385,18 @@ export function TimeTableAdmin() {
       }}>Reset Dates</Button>
       </div>
       <div className="flex items-center py-4">
-        <span className="pr-4">Search Project:-</span>
+      <span className="pr-4">Search Client:-</span>
+        <Input
+          placeholder="Filter client..."
+          value={
+            (table.getColumn("projectClient")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("projectClient")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm text-black"
+        />
+        <span className="pr-4 pl-3">Search Project:-</span>
         <Input
           placeholder="Filter project..."
           value={

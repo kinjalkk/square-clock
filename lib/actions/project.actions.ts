@@ -13,10 +13,10 @@ export async function getProject(
     const projectFound = await Project.findOne({
       $and: [
         {
-          client: {$regex: new RegExp(`^${client}$`,"i")},
+          client: { $regex: new RegExp(`^${client}$`, "i") },
         },
         {
-          project: {$regex: new RegExp(`^${project}$`,"i")},
+          project: { $regex: new RegExp(`^${project}$`, "i") },
         },
       ],
     });
@@ -40,8 +40,8 @@ export async function createNewProject(
     }
 
     const newProject = await Project.create({
-      client: client.charAt(0).toUpperCase()+client.slice(1).toLowerCase(),
-      project: project.charAt(0).toUpperCase()+project.slice(1).toLowerCase(),
+      client: client.charAt(0).toUpperCase() + client.slice(1).toLowerCase(),
+      project: project.charAt(0).toUpperCase() + project.slice(1).toLowerCase(),
       maxTime: hours,
     });
 
@@ -86,12 +86,24 @@ export async function getAllClients() {
   }
 }
 
-export async function updateProject(projectId:string,hours:number) {
+export async function updateProject(
+  projectId: string,
+  hours: number,
+  client: string,
+  project: string
+) {
   try {
     connectToDB();
-    const updateProject = await Project.findByIdAndUpdate(projectId,{
-      maxTime:hours,
-    });
+    const updateProject = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        maxTime: hours,
+        client: client.charAt(0).toUpperCase() + client.slice(1).toLowerCase(),
+        project:
+          project.charAt(0).toUpperCase() + project.slice(1).toLowerCase(),
+      },
+      { new: true }
+    );
     if (updateProject) {
       return JSON.parse(JSON.stringify(updateProject));
     } else {
