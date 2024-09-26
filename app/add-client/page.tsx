@@ -8,14 +8,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { createNewProject, getProject } from "@/lib/actions/project.actions";
+import { createNewProject, getAllClients, getProject } from "@/lib/actions/project.actions";
 import { useSession } from "next-auth/react";
+import { Check } from "lucide-react";
 
 const projectSchema = z.object({
   client: z.string().min(1, {
@@ -32,6 +46,9 @@ const Page = () => {
   const session=useSession();
   const [isProjectExist, setIsProjectExist] = useState(false);
   const [invalidCredentials, setInvalidCredentails] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [clients, setClients] = React.useState([]);
+
   const router = useRouter();
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
@@ -74,6 +91,15 @@ const Page = () => {
     return
   }
 
+  const getClients = async () => {
+    const clientsFormDb = await getAllClients();
+    setClients(clientsFormDb);
+  };
+
+  useEffect(() => {
+    getClients();
+  }, []);
+
   return (
     <div className=' w-full relative'>
       <div className="bg-black lg:bg-opacity-50 min-h-screen w-full flex justify-center">
@@ -92,12 +118,47 @@ const Page = () => {
                       </FormLabel>
                     )}
                     <FormControl>
-                      <Input
+                      <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <div className="relative">
+              <Input
                         placeholder="client name"
                         {...field}
                         className="mt-[2rem] mb-[1rem] h-[3.5rem] rounded-sm bg-zinc-900"
                         onKeyUp={handleKeyUp}
                       />
+              </div>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-full max-w-xs">
+              <Command>
+                <CommandInput placeholder="Search client..." />
+
+                <CommandList>
+                  <CommandEmpty>No client found.</CommandEmpty>
+
+                  <CommandGroup>
+                    {clients?.map((client) => (
+                      <CommandItem
+                        key={client}
+                        value={client}
+                        onSelect={(currentValue) => {
+                          field.onChange(currentValue);
+                          setOpen(false);
+                        }}
+                        className="capitalize"
+                      >
+                        <Check
+                          className="mr-2 h-4 w-4"
+                        />
+                        {client}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

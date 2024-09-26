@@ -107,7 +107,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                         className="capitalize"
                       >
                         <Check
-                          className-={cn(
+                          className={cn(
                             "mr-2 h-4 w-4",
 
                             selectedClient === client
@@ -166,7 +166,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                           className="capitalize"
                         >
                           <Check
-                            className-={cn(
+                            className={cn(
                               "mr-2 h-4 w-4",
 
                               selectedProject?.project === project?.project
