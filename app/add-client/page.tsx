@@ -57,7 +57,13 @@ const Page = () => {
       hours:"",
     },
   });
-
+  const getClients = async () => {
+    const clientsFormDb = await getAllClients();
+    setClients(clientsFormDb);
+  };
+  useEffect(() => {
+    getClients();
+  }, []);
   async function onSubmit(values: z.infer<typeof projectSchema>) {    
     if(isNaN(parseInt(values.hours))){
       setInvalidCredentails(true);
@@ -89,15 +95,6 @@ const Page = () => {
     router.push("/");
     return
   }
-
-  const getClients = async () => {
-    const clientsFormDb = await getAllClients();
-    setClients(clientsFormDb);
-  };
-
-  useEffect(() => {
-    getClients();
-  }, []);
 
   return (
     <div className=' w-full relative'>
