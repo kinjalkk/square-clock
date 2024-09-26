@@ -472,7 +472,7 @@ export function TimeTableAdmin() {
           <Button
             variant="outline"
             size="sm"
-            className="ml-4bg-red-600"
+            className="ml-4 bg-red-600"
             onClick={downloadExcel}
           >
             DownLoad
