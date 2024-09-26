@@ -29,7 +29,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { createNewProject, getAllClients, getProject } from "@/lib/actions/project.actions";
 import { useSession } from "next-auth/react";
-import { Check } from "lucide-react";
 
 const projectSchema = z.object({
   client: z.string().min(1, {
@@ -148,9 +147,6 @@ const Page = () => {
                         }}
                         className="capitalize"
                       >
-                        <Check
-                          className="mr-2 h-4 w-4"
-                        />
                         {client}
                       </CommandItem>
                     ))}
