@@ -207,7 +207,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
             value={description}
             onChange={(e)=>setDescription(e.target.value)}
             />
-            <Button onClick={start}>Start</Button>
+            <Button onClick={start} className="bg-red-600">Start</Button>
             </>
           )}
         </div>

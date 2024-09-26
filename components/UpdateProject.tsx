@@ -202,7 +202,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                   onChange={(e) => setHours(Number(e.target.value))}
                 />
               </div>
-              <Button onClick={update}>Update</Button>
+              <Button onClick={update} className="bg-red-600">Update</Button>
             </>
           )}
         </div>

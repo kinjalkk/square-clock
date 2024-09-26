@@ -68,10 +68,6 @@ export function TimeTableAdmin() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 6,
-  });
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
   const [data,setData]=React.useState<TimeSchema[]>([]);
@@ -217,7 +213,7 @@ export function TimeTableAdmin() {
       cell: ({ row }) => {
         return (
           row.original.hours===0? (
-          <Button variant="ghost" className="h-8 w-8 p-0" onClick={()=>stop(row.original._id)}>
+          <Button variant="ghost" className="h-8 w-8 p-0 bg-red-600" onClick={()=>stop(row.original._id)}>
                 <CircleStop className="h-4 w-4" />
               </Button>):(<></>)
           
@@ -236,13 +232,11 @@ export function TimeTableAdmin() {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination: pagination,
     },
   });
   React.useEffect(()=>{
@@ -379,7 +373,7 @@ export function TimeTableAdmin() {
             />
           </PopoverContent>
         </Popover>
-        <Button variant="outline" className="w-1/4 text-black" onClick={()=>{
+        <Button variant="outline" className="w-1/4 bg-red-600" onClick={()=>{
         setStartDate(null);
         setEndDate(null);
       }}>Reset Dates</Button>
@@ -478,7 +472,7 @@ export function TimeTableAdmin() {
           <Button
             variant="outline"
             size="sm"
-            className="ml-4 text-black"
+            className="ml-4bg-red-600"
             onClick={downloadExcel}
           >
             DownLoad

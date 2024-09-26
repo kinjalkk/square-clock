@@ -70,10 +70,6 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 6,
-  });
   const [data,setData]=React.useState<TimeSchemaUser[]>(times);
   const [isPickUpStartOpen,setIsPickUpStartOpen]=React.useState<boolean>(false);
   const [isEndDateOpen,setIsEndDateOpen]=React.useState<boolean>(false);
@@ -181,7 +177,7 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
       cell: ({ row }) => {
         return (
           row.original.hours===0? (
-          <Button variant="ghost" className="h-8 w-8 p-0" onClick={()=>stop(row.original._id)}>
+          <Button variant="ghost" className="h-8 w-8 p-0 bg-red-600" onClick={()=>stop(row.original._id)}>
                 <CircleStop className="h-4 w-4" />
               </Button>):(<></>)
           
@@ -200,13 +196,11 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination: pagination,
     },
   });
   const format = (date: Date, format: string): string => {
@@ -278,7 +272,7 @@ export function TimeTable({stop,times,startDate,setStartDate,endDate,setEndDate}
           />
         </PopoverContent>
       </Popover>
-      <Button variant="outline" className="w-1/4 text-black" onClick={()=>{
+      <Button variant="outline" className="w-1/4 bg-red-600" onClick={()=>{
         setStartDate(null);
         setEndDate(null);
       }}>Reset Dates</Button>
