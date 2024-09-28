@@ -48,13 +48,13 @@ const Navbar = ({session}:{session:any}) => {
                 className="cursor-pointer"
                 onClick={() => router.push(`${session?.isAdmin?"/reset-password-admin":"/reset-password"}`)}
               >
-                change password
+                Change password
               </DropdownMenuItem>
               {session.isAdmin && <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => router.push("/time-table-admin")}
               >
-                Time Table
+                Track hours
               </DropdownMenuItem>}
               <DropdownMenuItem
                 className="cursor-pointer"

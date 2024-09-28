@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,7 +83,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
       <div className="w-[80%]">
         <div className="mx-auto gap-6 flex flex-row items-center max-sm:ml-4">
           <div className="flex">
-          <h1 className="text-xl text-white mr-4"> Start Work:- </h1>
+          <span className="text-white mr-4"> Start work: </span>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -102,7 +102,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
 
             <PopoverContent className="w-[200px] p-8">
               <Command>
-                <CommandInput placeholder="Search client..." />
+                <CommandInput placeholder="Search client" className="capitalize"/>
 
                 <CommandList>
                   <CommandEmpty>No client found.</CommandEmpty>
@@ -120,6 +120,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
                             return
                           }
                           setSelectedClient(currentValue);
+                          setSelectedProject(null);
                           setOpen(false);
                         }}
                         className="capitalize"
@@ -157,15 +158,15 @@ const TimeSheet:React.FC<any> = ({session}) => {
                         (project:any) =>
                           project?.project === selectedProject?.project
                       )?.project
-                    : "Select project..."}
+                    : "Select project"}
 
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-8 opacity-50" />
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-8 opacity-50" />
                 </Button>
               </PopoverTrigger>
 
               <PopoverContent className="w-[200px] р-8">
                 <Command>
-                  <CommandInput placeholder="Search client..." />
+                  <CommandInput placeholder="Search project" />
                   <CommandList>
                     <CommandEmpty>No project found.</CommandEmpty>
 

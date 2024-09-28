@@ -113,7 +113,7 @@ const Page = () => {
     <div className=" w-full relative">
       <div className="bg-black lg:bg-opacity-50 min-h-screen w-full flex justify-center">
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] py-[4rem]">
-          <h1 className="text-[2rem] font-bold">Add Project</h1>
+          <h1 className="text-[2rem] font-bold">Add project</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
               <FormField
@@ -210,7 +210,7 @@ const Page = () => {
                 </p>
               )}
               <Button type="submit" className="w-[100%] bg-red-600 mt-[3rem]">
-                Add Project
+                Add project
               </Button>
             </form>
           </Form>

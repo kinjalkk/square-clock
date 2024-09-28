@@ -26,51 +26,49 @@ const SignedOut = () => {
               href="/login"
               className="bg-[#E50914] px-[2rem] py-[0.5rem] rounded-md text-white text-[0.9rem] text-center"
             >
-              Sign In
+              Sign in
             </Link>
           </div>
         </div>
         <div className="px-4 py-4 w-[80%] m-auto">
           <h1 className="text-4xl font-bold text-center mb-4 text-white">
-            Welcome to Square Clock – Shaping Efficiency, Building Dreams
+            Welcome to Square Clock – Shaping efficiency, building dreams
           </h1>
 
           <p className="text-xl text-white mb-4">
             At Square, every minute you spend contributes to designing spaces
-            that inspire. Time is one of our most valuable resources, and
-            logging it helps us understand where we excel and where we can
-            improve.
+            that inspire. Time is one of our most valuable resources, and tracking it enables us to identify our strengths and areas of improvement.
           </p>
 
           <section className="text-white rounded-lg shadow-md p-4">
             <h2 className="text-2xl font-semibold mb-2">
-              Why Time Logging Matters:
+              Why time logging matters:
             </h2>
             <ol className="list-decimal space-y-4">
               <li className="mb-1">
-                <p className="font-medium">Optimize Your Workflow</p>
+                <p className="font-medium">Optimize your workflow</p>
                 <p>
                   By tracking your time, you can see how your efforts translate
-                  into progress, giving you insight into managing your day more
+                  into progress, giving you insights into managing your day more
                   effectively.
                 </p>
               </li>
               <li className="mb-1">
-                <p className="font-medium">Enhance Creativity</p>
+                <p className="font-medium">Enhance creativity</p>
                 <p>
                   Less time worrying about deadlines means more time to focus on
                   what you do best—creating stunning architectural designs.
                 </p>
               </li>
               <li className="mb-1">
-                <p className="font-medium">Empower Collaboration</p>
+                <p className="font-medium">Empower collaboration</p>
                 <p>
                   Time logs enable seamless collaboration, ensuring every team
                   member&apos;s contributions align toward shared goals.
                 </p>
               </li>
               <li className="mb-1">
-                <p className="font-medium">Build Your Legacy</p>
+                <p className="font-medium">Build your legacy</p>
                 <p>
                   With clear visibility of your work, you&apos;re not just logging
                   hours, you&apos;re building a portfolio of achievement.

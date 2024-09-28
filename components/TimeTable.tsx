@@ -121,7 +121,7 @@ export function TimeTable({
 
               <TooltipContent>
                 <p>
-                  <span className="font-bold">Total alotted:</span>{" "}
+                  <span className="font-bold">Total allotted:</span>{" "}
                   {row.original.projectMaxTime} hrs
                 </p>
               </TooltipContent>
@@ -133,7 +133,7 @@ export function TimeTable({
     {
       accessorKey: "checkInTime",
       header: () => (
-        <div className="text-center font-bold text-white">date</div>
+        <div className="text-center font-bold text-white">Date</div>
       ),
       cell: ({ row }) => (
         <div className="text-center font-medium lowercase">
@@ -163,7 +163,7 @@ export function TimeTable({
                 )}
               </TooltipTrigger>
 
-              <TooltipContent>
+              <TooltipContent className="text-left">
                 <p>
                   <span className="font-bold">Start Time:</span>{" "}
                   {new Date(row.original.checkInTime).toLocaleString("en-US", {
@@ -186,7 +186,7 @@ export function TimeTable({
                 </p>
                 <p className="w-72">
                   <span className="font-bold">Description:</span>{" "}
-                  {row.original.description}
+                  {row.original.description || "NA"}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -311,13 +311,24 @@ export function TimeTable({
             setEndDate(null);
           }}
         >
-          Reset Dates
+          Reset date
         </Button>
       </div>
       <div className="flex items-center py-4">
-        <span className="pr-4">Search Project:-</span>
+      <span className="pr-4">Search Client:</span>
         <Input
-          placeholder="Filter Project..."
+          placeholder="Filter client..."
+          value={
+            (table.getColumn("projectClient")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("projectClient")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm text-black"
+        />
+        <span className="pr-4 pl-3">Search Project:</span>
+        <Input
+          placeholder="Filter project"
           value={
             (table.getColumn("projectName")?.getFilterValue() as string) ?? ""
           }
@@ -390,10 +401,10 @@ export function TimeTable({
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-White">
-          Total Hours:{" "}
+          Total hours:{" "}
           {table
             .getFilteredRowModel()
-            .rows.reduce((total, row) => total + row.original.hours, 0)}
+            .rows.reduce((total, row) => total + row.original.hours, 0).toFixed(2)}
         </div>
         <div className="space-x-2 text-black">
           <Button

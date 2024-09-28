@@ -121,7 +121,7 @@ export function TimeTableAdmin() {
   
               <TooltipContent>
                 <p>
-                  <span className="font-bold">Total alotted:</span>{" "}
+                  <span className="font-bold">Total allotted:</span>{" "}
                   {row.original.projectMaxTime} hrs
                 </p>
               </TooltipContent>
@@ -139,7 +139,7 @@ export function TimeTableAdmin() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="text-white font-bold"
           >
-            User Mail
+            Email
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -159,7 +159,7 @@ export function TimeTableAdmin() {
     },
     {
       accessorKey: "checkInTime",
-      header: () => <div className="text-center font-bold text-white">date</div>,
+      header: () => <div className="text-center font-bold text-white">Date</div>,
       cell: ({ row }) => (
         <div className="text-center font-medium lowercase">
           {new Date(row.original.checkInTime).toLocaleString("en-US", {
@@ -185,9 +185,9 @@ export function TimeTableAdmin() {
                 )}
               </TooltipTrigger>
   
-              <TooltipContent>
+              <TooltipContent className="text-left">
                 <p>
-                  <span className="font-bold">Start Time:</span>{" "}
+                  <span className="font-bold">Start time:</span>{" "}
                   {new Date(row.original.checkInTime).toLocaleString("en-US", {
                     hour: "numeric",
                     minute:"numeric",
@@ -195,7 +195,7 @@ export function TimeTableAdmin() {
                 </p>
   
                 <p>
-                  <span className="font-bold">End Time: </span>{" "}
+                  <span className="font-bold">End time: </span>{" "}
                   {row.original.checkOutTime?new Date(row.original.checkOutTime).toLocaleString("en-US", {
                     hour: "numeric",
                     minute:"numeric",
@@ -203,7 +203,7 @@ export function TimeTableAdmin() {
                 </p>
                 <p className="w-72">
                   <span className="font-bold">Description:</span>{" "}
-                  {row.original.description}
+                  {row.original.description || "NA"}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -245,6 +245,11 @@ export function TimeTableAdmin() {
   });
   React.useEffect(()=>{
     getTimes();
+  },[])
+  React.useEffect(()=>{
+    if(startDate && endDate){
+    getTimes();
+    }
   },[startDate,endDate])
   const format = (date: Date, format: string): string => {
     const options: Intl.DateTimeFormatOptions = {
@@ -328,7 +333,7 @@ export function TimeTableAdmin() {
   return (
     <div className="w-full text-white">
         <UpdateProject refreshTime={getTimes}/>
-        <h1 className="text-2xl font-bold mt-4 text-white underline flex justify-center">TimeSheet</h1>
+        <h1 className="text-2xl font-bold mt-4 text-white underline flex justify-center">Timesheet</h1>
       <div className="flex justify-between pt-8">
         <Popover open={isPickUpStartOpen} onOpenChange={setIsPickUpStartOpen}>
           <PopoverTrigger asChild>
@@ -380,12 +385,13 @@ export function TimeTableAdmin() {
         <Button variant="outline" className="w-1/4 bg-red-600" onClick={()=>{
         setStartDate(null);
         setEndDate(null);
-      }}>Reset Dates</Button>
+        getTimes();
+      }}>Reset dates</Button>
       </div>
       <div className="flex items-center py-4">
-      <span className="pr-4">Search Client:-</span>
+      <span className="pr-4">Search client:</span>
         <Input
-          placeholder="Filter client..."
+          placeholder="Filter client"
           value={
             (table.getColumn("projectClient")?.getFilterValue() as string) ?? ""
           }
@@ -394,9 +400,9 @@ export function TimeTableAdmin() {
           }
           className="max-w-sm text-black"
         />
-        <span className="pr-4 pl-3">Search Project:-</span>
+        <span className="pr-4 pl-3">Search project:</span>
         <Input
-          placeholder="Filter project..."
+          placeholder="Filter project"
           value={
             (table.getColumn("projectName")?.getFilterValue() as string) ?? ""
           }
@@ -405,9 +411,9 @@ export function TimeTableAdmin() {
           }
           className="max-w-sm text-black"
         />
-        <span className="pl-5 pr-4">Search User:-</span>
+        <span className="pl-5 pr-4">Search user:</span>
         <Input
-          placeholder="Filter user..."
+          placeholder="Filter user"
           value={
             (table.getColumn("userName")?.getFilterValue() as string) ?? ""
           }
@@ -492,7 +498,7 @@ export function TimeTableAdmin() {
             className="ml-4 bg-red-600"
             onClick={downloadExcel}
           >
-            DownLoad
+            Download
           </Button>
         </div>
         <div className="space-x-2 text-black">

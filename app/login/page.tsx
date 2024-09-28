@@ -94,7 +94,7 @@ const Page = () => {
           </div>
         </div>
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] h-[80%] py-[4rem]">
-          <h1 className="text-[2rem] font-bold">Sign In</h1>
+          <h1 className="text-[2rem] font-bold">Sign in</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
               <FormField
@@ -104,7 +104,7 @@ const Page = () => {
                   <FormItem>
                     {isSignUp && (
                       <FormLabel className="text-red-600 mb-2rem">
-                        User does not exist. Please register!
+                        User does not exist. Please sign up!
                       </FormLabel>
                     )}
                     <FormControl>
@@ -140,9 +140,9 @@ const Page = () => {
               {invalidCredentials && (
                 <p className="text-red-600">Invalid Credentials</p>
               )}
-              <span className="text-zinc-400 text-[0.9rem]">New to Square?</span><Link href="/signup" className="text-[0.9rem]"> Sign up now.</Link>
+              <span className="text-zinc-400 text-[0.9rem]">New to Square Clock?</span><Link href="/signup" className="text-[0.9rem] hover:underline"> Sign up now.</Link>
               <Button type="submit" className="w-[100%] bg-red-600 mt-[3rem]">
-                Sign In
+                Sign in
               </Button>
             </form>
           </Form>

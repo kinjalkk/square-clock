@@ -104,7 +104,7 @@ const Page = () => {
           </div>
         </div>
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] py-[4rem]">
-          <h1 className="text-[2rem] font-bold">Sign Up</h1>
+          <h1 className="text-[2rem] font-bold">Sign up</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
               <FormField
@@ -176,7 +176,7 @@ const Page = () => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        placeholder="re-enter Password"
+                        placeholder="re-enter password"
                         {...field}
                         className="mb-[1rem] h-[3.5rem] rounded-sm bg-zinc-900 bg-opacity-50 mt-[1rem]"
                         type="password"
@@ -191,13 +191,13 @@ const Page = () => {
                 Already have an account?{" "}
               </span>
               <Link href="/login" className="text-[0.9rem]">
-                Sign In
+                Sign in
               </Link>
               {passwordNotMatched && (
                 <p className="text-red-600">password not matched</p>
               )}
               <Button type="submit" className="w-[100%] bg-red-600 mt-[3rem]">
-                Sign Up
+                Sign up
               </Button>
             </form>
           </Form>
