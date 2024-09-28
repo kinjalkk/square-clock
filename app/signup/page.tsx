@@ -33,37 +33,46 @@ const loginSchema = z.object({
   username: z.string().min(3, {
     message: "username cannot be less than 3 characters",
   }),
+  reTypePassword: z.string().min(3, {
+    message: "password cannot be less than 3 characters",
+  }),
 });
 
 const Page = () => {
   const [isEmailExist, setIsEmailExist] = useState(false);
   const [usernameExist, setUsernameExist] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [passwordNotMatched, setPasswordNotMatched] = useState(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
       username: "",
+      reTypePassword: "",
     },
   });
   const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setLoading(true);
-    const userByEmail = await getUserByEmail(values.email);
-    const userByUsername = await getUserByUsername(values.username);
-    if (userByEmail) {
-      setIsEmailExist(true);
-    } else if (userByUsername) {
-      setUsernameExist(true);
+    if (values.password !== values.reTypePassword) {
+      setPasswordNotMatched(true);
     } else {
-      const registered = await registerUser(
-        values.email,
-        values.password,
-        values.username
-      );
-      if (registered) router.push("/login");
+      const userByEmail = await getUserByEmail(values.email);
+      const userByUsername = await getUserByUsername(values.username);
+      if (userByEmail) {
+        setIsEmailExist(true);
+      } else if (userByUsername) {
+        setUsernameExist(true);
+      } else {
+        const registered = await registerUser(
+          values.email,
+          values.password,
+          values.username
+        );
+        if (registered) router.push("/login");
+      }
     }
     setLoading(false);
   }
@@ -71,6 +80,7 @@ const Page = () => {
   const handleKeyUp = () => {
     setIsEmailExist(false);
     setUsernameExist(false);
+    setPasswordNotMatched(false);
   };
 
   return loading ? (
@@ -93,7 +103,7 @@ const Page = () => {
             <h2 className="text-lg text-white pl-5">Square Clock</h2>
           </div>
         </div>
-        <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] h-[80%] py-[4rem]">
+        <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] py-[4rem]">
           <h1 className="text-[2rem] font-bold">Sign Up</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
@@ -159,13 +169,33 @@ const Page = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="reTypePassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="re-enter Password"
+                        {...field}
+                        className="mb-[1rem] h-[3.5rem] rounded-sm bg-zinc-900 bg-opacity-50 mt-[1rem]"
+                        type="password"
+                        onKeyUp={handleKeyUp}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <span className="text-zinc-400 text-[0.9rem]">
                 Already have an account?{" "}
               </span>
               <Link href="/login" className="text-[0.9rem]">
                 Sign In
               </Link>
-
+              {passwordNotMatched && (
+                <p className="text-red-600">password not matched</p>
+              )}
               <Button type="submit" className="w-[100%] bg-red-600 mt-[3rem]">
                 Sign Up
               </Button>

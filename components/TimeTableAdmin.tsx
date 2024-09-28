@@ -485,7 +485,7 @@ export function TimeTableAdmin() {
           Total Hours:{" "}
           {table
             .getFilteredRowModel()
-            .rows.reduce((total, row) => total + row.original.hours, 0)}
+            .rows.reduce((total, row) => total + row.original.hours, 0).toFixed(2)}
           <Button
             variant="outline"
             size="sm"
