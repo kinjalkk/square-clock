@@ -19,6 +19,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { decode } from "next-auth/jwt";
+import Loader from "@/components/Loader";
 
 const loginSchema = z.object({
   username: z.string().min(2, {
@@ -34,6 +35,7 @@ const Page = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [invalidCredentials, setInvalidCredentails] = useState(false);
+  const [loading,setLoading]=useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -44,6 +46,7 @@ const Page = () => {
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setLoading(true);
     const user = await getUserByEmailOrUsername(values.username);
     if (!user) {
       setIsSignUp(true);
@@ -63,6 +66,7 @@ const Page = () => {
         console.log("error:", error);
       }
     }
+    setLoading(false);
   }
 
   const handleKeyUp = () => {
@@ -70,7 +74,11 @@ const Page = () => {
     setInvalidCredentails(false);
   };
 
-  return (
+  return ( loading ?
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader/>
+    </div>
+    :
     <div className='w-full relative '>
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
         <div className="w-[80%]">

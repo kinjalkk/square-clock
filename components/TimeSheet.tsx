@@ -32,6 +32,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
   const [description,setDescription]=React.useState("")
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
+  const [loading,setLoading]=React.useState<boolean>(true)
   useEffect(() => {
     (async () => {
       const clientsFormDb = await getAllClients();
@@ -45,6 +46,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
     })();
   }, [selectedClient]);
   const fetchTimes= async () => {
+    setLoading(true);
     let times:TimeSchemaUser[];
     if(startDate && endDate){
       times = await getTimeByDateRangeUser(startDate,endDate,session?.user.id);
@@ -52,6 +54,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
       times = await getTime(session?.user?.id);
     }
     setAllTimes(times);
+    setLoading(false);
   }
   useEffect(() => {
     if (session) {
@@ -212,7 +215,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
           )}
         </div>
         <h1 className="text-2xl font-bold mt-8 text-white underline flex justify-center">TimeSheet</h1>
-        <TimeTable stop={stop} times={alltimes} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
+        <TimeTable stop={stop} times={alltimes} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} loading={loading}/>
       </div>
   );
 };

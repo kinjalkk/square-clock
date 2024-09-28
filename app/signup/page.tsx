@@ -21,7 +21,7 @@ import {
 } from "@/lib/actions/user.actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import Loader from "@/components/Loader";
 
 const loginSchema = z.object({
   email: z.string().min(2, {
@@ -38,6 +38,7 @@ const loginSchema = z.object({
 const Page = () => {
   const [isEmailExist, setIsEmailExist] = useState(false);
   const [usernameExist, setUsernameExist] = useState(false);
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,9 +47,10 @@ const Page = () => {
       username: "",
     },
   });
-  const router= useRouter();
+  const router = useRouter();
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {    
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setLoading(true);
     const userByEmail = await getUserByEmail(values.email);
     const userByUsername = await getUserByUsername(values.username);
     if (userByEmail) {
@@ -59,10 +61,11 @@ const Page = () => {
       const registered = await registerUser(
         values.email,
         values.password,
-        values.username,
+        values.username
       );
-      if(registered) router.push("/login")
+      if (registered) router.push("/login");
     }
+    setLoading(false);
   }
 
   const handleKeyUp = () => {
@@ -70,19 +73,24 @@ const Page = () => {
     setUsernameExist(false);
   };
 
-  return (
-    <div className='w-full relative'>
+  return loading ? (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader />
+    </div>
+  ) : (
+    <div className="w-full relative">
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
         <div className="w-[80%]">
           <div className="flex items-center pt-5">
-          <Image
-          src="/images/logo.png"
-          alt="logo"
-          height={0}
-          width={0}
-          className="h-10 w-auto"
-          unoptimized
-        /><h2 className="text-lg text-white pl-5">Square Clock</h2>
+            <Image
+              src="/images/logo.png"
+              alt="logo"
+              height={0}
+              width={0}
+              className="h-10 w-auto"
+              unoptimized
+            />
+            <h2 className="text-lg text-white pl-5">Square Clock</h2>
           </div>
         </div>
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] h-[80%] py-[4rem]">
@@ -151,7 +159,12 @@ const Page = () => {
                   </FormItem>
                 )}
               />
-              <span className="text-zinc-400 text-[0.9rem]">Already have an account? </span><Link href="/login" className="text-[0.9rem]">Sign In</Link>
+              <span className="text-zinc-400 text-[0.9rem]">
+                Already have an account?{" "}
+              </span>
+              <Link href="/login" className="text-[0.9rem]">
+                Sign In
+              </Link>
 
               <Button type="submit" className="w-[100%] bg-red-600 mt-[3rem]">
                 Sign Up

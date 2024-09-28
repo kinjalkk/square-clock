@@ -12,42 +12,47 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {  updatePassword } from "@/lib/actions/user.actions";
+import { updatePassword } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Loader from "@/components/Loader";
 
 const resetPasswordAdminSchema = z.object({
   username: z.string().min(2, {
     message: "Enter valid email",
   }),
   password: z.string().min(3, {
-    message: "Enter valid password"
+    message: "Enter valid password",
   }),
   reEnterPassword: z.string().min(3, {
-    message: "Enter valid password"
+    message: "Enter valid password",
   }),
 });
 
-
 const Page = () => {
-  const session:any=useSession();
+  const session: any = useSession();
   const [invalidCredentials, setInvalidCredentails] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof resetPasswordAdminSchema>>({
     resolver: zodResolver(resetPasswordAdminSchema),
     defaultValues: {
       username: "",
       password: "",
-      reEnterPassword:""
+      reEnterPassword: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof resetPasswordAdminSchema>) {
-    if (values.password!==values.reEnterPassword) {
+    setLoading(true);
+    if (values.password !== values.reEnterPassword) {
       setInvalidCredentails(true);
     } else {
       try {
-        const changePassword = await updatePassword(values.username,values.password);
+        const changePassword = await updatePassword(
+          values.username,
+          values.password
+        );
         if (!changePassword) {
           setInvalidCredentails(true);
         } else {
@@ -57,17 +62,25 @@ const Page = () => {
         console.log("error:", error);
       }
     }
+    setLoading(false);
   }
 
   const handleKeyUp = () => {
     setInvalidCredentails(false);
   };
-  if((session?.status==="authenticated" && session?.data?.isAdmin===false) ||  session?.status==="unauthenticated"){
+  if (
+    (session?.status === "authenticated" && session?.data?.isAdmin === false) ||
+    session?.status === "unauthenticated"
+  ) {
     router.push("/");
-    return
+    return;
   }
-  return (
-    <div className='w-full relative bg-no-repeat bg-center bg-cover'>
+  return loading ? (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader />
+    </div>
+  ) : (
+    <div className="w-full relative bg-no-repeat bg-center bg-cover">
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] py-[4rem]">
           <h1 className="text-[1.8rem] font-bold">change password</h1>

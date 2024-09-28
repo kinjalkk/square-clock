@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {  updatePassword } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Loader from "@/components/Loader";
 
 const resetPasswordSchema = z.object({
   password: z.string().min(3, {
@@ -29,6 +30,7 @@ const resetPasswordSchema = z.object({
 const Page = () => {
   const session=useSession();
   const [invalidCredentials, setInvalidCredentails] = useState(false);
+  const [loading,setLoading]=useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -39,6 +41,7 @@ const Page = () => {
   });
 
   async function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
+    setLoading(true);
     if (values.password!==values.reEnterPassword) {
       setInvalidCredentails(true);
     } else {
@@ -58,6 +61,7 @@ const Page = () => {
         console.log("error:", error);
       }
     }
+    setLoading(false);
   }
 
   const handleKeyUp = () => {
@@ -68,6 +72,10 @@ const Page = () => {
     return null;
   }
   return (
+    loading?
+    <div className="flex items-center justify-center min-h-screen">
+    <Loader/>
+  </div>:
     <div className=' w-full relative bg-no-repeat bg-center bg-cover'>
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
         <div className="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-start items-start px-[4rem] bg-black bg-opacity-80 w-[25rem] py-[4rem]">

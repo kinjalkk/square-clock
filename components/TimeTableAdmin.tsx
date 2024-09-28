@@ -41,6 +41,7 @@ import * as XLSX from "exceljs";
 import { getAllTimes,getTimeByDateRange, stopTime } from "@/lib/actions/time.actions";
 import LiveTimer from "./LiveTimer";
 import UpdateProject from "./UpdateProject";
+import Loader from "./Loader";
 
 
 export type TimeSchema = {
@@ -73,7 +74,9 @@ export function TimeTableAdmin() {
   const [data,setData]=React.useState<TimeSchema[]>([]);
   const [isPickUpStartOpen,setIsPickUpStartOpen]=React.useState<boolean>(false);
   const [isEndDateOpen,setIsEndDateOpen]=React.useState<boolean>(false);
+  const [loading,setLoading]=React.useState<boolean>(false);
   const getTimes=async ()=>{
+    setLoading(true);
     let allTimes:TimeSchema[];
     if(startDate && endDate){
       allTimes= await getTimeByDateRange(startDate,endDate);
@@ -81,6 +84,7 @@ export function TimeTableAdmin() {
       allTimes=await getAllTimes();
     }
     setData(allTimes);
+    setLoading(false);
   }
 
   const columns: ColumnDef<TimeSchema>[] = [
@@ -434,7 +438,20 @@ export function TimeTableAdmin() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading?
+             (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <Loader />
+                  </div>
+                </TableCell>
+              </TableRow>
+            )
+            : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
