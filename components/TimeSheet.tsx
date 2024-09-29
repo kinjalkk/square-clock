@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Check, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,9 +94,9 @@ const TimeSheet:React.FC<any> = ({session}) => {
               >
                 {selectedClient
                   ? clients?.find((client) => client === selectedClient)
-                  : "Select client..."}
+                  : "Select client"}
 
-                <ChevronsUpDown className="m1-2 h-4 w-4 shrink-e opacity-50" />
+                <ChevronDown className="m1-2 h-4 w-4 shrink-e opacity-50" />
               </Button>
             </PopoverTrigger>
 
@@ -144,7 +144,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
           </Popover>
           </div>
         
-          {selectedClient && (
+          
             <Popover open={openProject} onOpenChange={setOpenProject}>
               <PopoverTrigger asChild>
                 <Button
@@ -152,6 +152,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
                   role="combobox"
                   aria-expanded={openProject}
                   className="w-[200px] justify-between"
+                  disabled={!selectedClient}
                 >
                   {selectedProject?.project
                     ? projects?.find(
@@ -201,19 +202,20 @@ const TimeSheet:React.FC<any> = ({session}) => {
                 </Command>
               </PopoverContent>
             </Popover>
-          )}
+         
 
-          {selectedProject && selectedClient && (
-            <>
+           
+          
             <textarea
             className="border rounded-md p-2 w-full"
             placeholder="Enter description"
             value={description}
+            disabled={!selectedProject}
             onChange={(e)=>setDescription(e.target.value)}
             />
-            <Button onClick={start} className="bg-red-600">Start</Button>
-            </>
-          )}
+            <Button onClick={start} className="bg-red-600" disabled={!selectedProject}>Start</Button>
+         
+          
         </div>
         <h1 className="text-2xl font-bold mt-8 text-white underline flex justify-center">TimeSheet</h1>
         <TimeTable stop={stop} times={alltimes} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} loading={loading}/>

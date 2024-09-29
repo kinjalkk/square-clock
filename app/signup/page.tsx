@@ -27,14 +27,14 @@ const loginSchema = z.object({
   email: z.string().min(2, {
     message: "Enter valid email",
   }),
-  password: z.string().min(3, {
-    message: "password cannot be less than 3 characters",
+  password: z.string().min(6, {
+    message: "password cannot be less than 6 characters",
   }),
   username: z.string().min(3, {
     message: "username cannot be less than 3 characters",
   }),
-  reTypePassword: z.string().min(3, {
-    message: "password cannot be less than 3 characters",
+  reTypePassword: z.string().min(6, {
+    message: "password cannot be less than 6 characters",
   }),
 });
 

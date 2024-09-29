@@ -21,11 +21,11 @@ const resetPasswordAdminSchema = z.object({
   username: z.string().min(2, {
     message: "Enter valid email",
   }),
-  password: z.string().min(3, {
-    message: "Enter valid password",
+  password: z.string().min(6, {
+    message: "Must contain at least 6 characters",
   }),
-  reEnterPassword: z.string().min(3, {
-    message: "Enter valid password",
+  reEnterPassword: z.string().min(6, {
+    message: "Must contain at least 6 characters",
   }),
 });
 

@@ -18,6 +18,6 @@ const LiveTimer: React.FC<LiveTimerProps> = ({ checkInTime }) => {
     const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
     return `${hours}h ${minutes}m ${seconds}s`;
   };
-  return <p>{calculateElapsedTime()}</p>;
+  return <p className="w-24">{calculateElapsedTime()}</p>;
 };
 export default LiveTimer;

@@ -21,7 +21,7 @@ const resetPasswordSchema = z.object({
   password: z.string().min(6, {
     message: "Must contain at least 6 characters"
   }),
-  reEnterPassword: z.string().min(3, {
+  reEnterPassword: z.string().min(6, {
     message: "Must contain at least 6 characters"
   }),
 });
