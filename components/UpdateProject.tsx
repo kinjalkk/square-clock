@@ -204,7 +204,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
               <DialogHeader>
                 <DialogTitle>Edit project</DialogTitle>
                 <DialogDescription>
-                  Make changes to your project here. Click save when you're
+                  Make changes to your project here. Click save when you&apos;re
                   done.
                 </DialogDescription>
               </DialogHeader>
