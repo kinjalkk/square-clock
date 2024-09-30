@@ -9,7 +9,7 @@ const SignedOut = () => {
           <div className="flex justify-between items-center">
             <div className="flex">
               <Image
-                src="/images/logo.png"
+                src="/images/logo.jpeg"
                 alt="logo"
                 height={0}
                 width={0}

@@ -7,7 +7,7 @@ import { authOptions } from "./api/auth/[...nextauth]/route";
 const Home = async () => {
   const session:Session|null= await getServerSession(authOptions);
   return (
-    <div className="w-full relative mt-4">
+    <div className="w-full relative">
       <div className="bg-black lg:bg-opacity-50 w-full min-h-screen flex justify-center">
       {session && (
         <>

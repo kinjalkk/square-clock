@@ -84,7 +84,7 @@ const Page = () => {
         <div className="w-[80%]">
           <div className="flex items-center pt-5">
           <Image
-          src="/images/logo.png"
+          src="/images/logo.jpeg"
           alt="logo"
           height={0}
           width={0}

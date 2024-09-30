@@ -15,10 +15,10 @@ const Navbar = ({session}:{session:any}) => {
   const router= useRouter()
   return (
     <>
-      <div className="mx-[2rem] max-sm:mx-[0.5rem] py-4 px-2 flex flex-row items-center sticky z-10 top-0 bg-[#0f1014]">
+      <div className="mx-[2rem] max-sm:mx-[0.5rem] py-4 px-2 flex flex-row items-center sticky z-10 top-0 bg-black">
         <Link className="cursor-pointer flex  align-middle items-center" href="/">
         <Image
-          src="/images/logo.png"
+          src="/images/logo.jpeg"
           alt="logo"
           height={0}
           width={0}
