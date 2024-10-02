@@ -32,7 +32,7 @@ const SignedOut = () => {
         </div>
         <div className="px-4 py-4 w-[80%] m-auto">
           <h1 className="text-4xl font-bold text-center mb-4 text-white">
-            Welcome to Square Clock – Shaping efficiency, building dreams
+            Welcome to Square Clock – shaping efficiency, building dreams
           </h1>
 
           <p className="text-xl text-white mb-4">

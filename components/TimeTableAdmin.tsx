@@ -244,10 +244,7 @@ export function TimeTableAdmin() {
     },
   });
   React.useEffect(()=>{
-    getTimes();
-  },[])
-  React.useEffect(()=>{
-    if(startDate && endDate){
+    if((startDate && endDate) || (!startDate && !endDate)){
     getTimes();
     }
   },[startDate,endDate])
@@ -385,7 +382,6 @@ export function TimeTableAdmin() {
         <Button variant="outline" className="w-1/4 bg-red-600" onClick={()=>{
         setStartDate(null);
         setEndDate(null);
-        getTimes();
       }}>Reset dates</Button>
       </div>
       <div className="flex items-center py-4">

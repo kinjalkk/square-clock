@@ -190,7 +190,7 @@ const Page = () => {
               <span className="text-zinc-400 text-[0.9rem]">
                 Already have an account?{" "}
               </span>
-              <Link href="/login" className="text-[0.9rem]">
+              <Link href="/login" className="text-[0.9rem] hover:underline">
                 Sign in
               </Link>
               {passwordNotMatched && (

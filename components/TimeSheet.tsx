@@ -56,11 +56,11 @@ const TimeSheet:React.FC<any> = ({session}) => {
     setAllTimes(times);
     setLoading(false);
   }
-  useEffect(() => {
-    if (session) {
+  React.useEffect(()=>{
+    if(session && ((startDate && endDate) || (!startDate && !endDate))){
       fetchTimes();
     }
-  },[session,startDate,endDate]);
+  },[session,startDate,endDate])
   const start = async () => {
     const startedTime = await startTime(
       session?.user?.id,
@@ -102,7 +102,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
 
             <PopoverContent className="w-[200px] p-8">
               <Command>
-                <CommandInput placeholder="Search client" className="capitalize"/>
+                <CommandInput placeholder="Search client"/>
 
                 <CommandList>
                   <CommandEmpty>No client found.</CommandEmpty>
@@ -123,7 +123,6 @@ const TimeSheet:React.FC<any> = ({session}) => {
                           setSelectedProject(null);
                           setOpen(false);
                         }}
-                        className="capitalize"
                       >
                         <Check
                           className={cn(
@@ -183,7 +182,6 @@ const TimeSheet:React.FC<any> = ({session}) => {
                             setSelectedProject(projectSelected);
                             setOpenProject(false);
                           }}
-                          className="capitalize"
                         >
                           <Check
                             className={cn(

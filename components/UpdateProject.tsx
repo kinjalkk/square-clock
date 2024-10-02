@@ -113,7 +113,6 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                           setSelectedProject(null);
                           setOpen(false);
                         }}
-                        className="capitalize"
                       >
                         <Check
                           className={cn(
@@ -172,7 +171,6 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                           setSelectedProject(projectSelected);
                           setOpenProject(false);
                         }}
-                        className="capitalize"
                       >
                         <Check
                           className={cn(

@@ -71,7 +71,7 @@ const Page = () => {
   }, []);
   async function onSubmit(values: z.infer<typeof projectSchema>) {
     setLoading(true);
-    if (isNaN(parseInt(values.hours))) {
+    if (values.hours && isNaN(parseInt(values.hours))) {
       setInvalidCredentails(true);
       return false;
     } else {
@@ -84,7 +84,7 @@ const Page = () => {
           const createProject = await createNewProject(
             values.client,
             values.project,
-            parseInt(values.hours)
+            values.hours ? parseInt(values.hours): 0
           );
           router.push("/");
         } catch (error) {
@@ -131,7 +131,7 @@ const Page = () => {
                         <PopoverTrigger asChild>
                           <div className="relative">
                             <Input
-                              placeholder="client name"
+                              placeholder="Select or type new client"
                               {...field}
                               className="mt-[2rem] mb-[1rem] h-[3.5rem] rounded-sm bg-zinc-900"
                               onKeyUp={handleKeyUp}
@@ -155,7 +155,6 @@ const Page = () => {
                                       field.onChange(currentValue);
                                       setOpen(false);
                                     }}
-                                    className="capitalize"
                                   >
                                     {client}
                                   </CommandItem>
