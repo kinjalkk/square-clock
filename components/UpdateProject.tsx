@@ -36,7 +36,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
   const [open, setOpen] = React.useState(false);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
-
+  const [invalidCredentials,setInvalidCredentails]=React.useState(false);
   const getClients = async () => {
     const clientsFormDb = await getAllClients();
     setClients(clientsFormDb);
@@ -59,20 +59,28 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
     })
   }
   const update = async () => {
-    if (selectedProject && selectedProject.maxTime > -1) {
+    if (selectedProject && selectedProject.maxTime > -1 && selectedProject.client && selectedProject.project) {
       const update = await updateProject(
         selectedProject?._id,
         selectedProject.maxTime,
         selectedProject?.client,
         selectedProject?.project 
       );
-      setSelectedClient("");
-      setSelectedProject(null);
-      setDialogOpen(false);
-      getClients();
-      refreshTime();
+      if(!update){
+        setInvalidCredentails(true);
+      }else{
+        setSelectedClient("");
+        setSelectedProject(null);
+        setDialogOpen(false);
+        getClients();
+        refreshTime();
+      }
     } else {
-      alert("please provide correct values");
+      if( !selectedProject.client || !selectedProject.project ){
+        alert("Client and/or Project feilds are mandatory");
+      } else{
+        alert("Hours feild can not be negative")
+      }
     }
   };
   return (
@@ -154,7 +162,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
 
             <PopoverContent className="w-full max-w-xs">
               <Command>
-                <CommandInput placeholder="Search Project..." />
+                <CommandInput placeholder="Search project..." />
 
                 <CommandList>
                   <CommandEmpty>No project found.</CommandEmpty>
@@ -245,6 +253,11 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                   />
                 </div>
               </div>
+              {invalidCredentials && (
+                <p className="text-red-600">
+                 Project already exists
+                </p>
+              )}
               <DialogFooter>
                 <Button type="submit" onClick={update} className="bg-red-600">Save changes</Button>
               </DialogFooter>
