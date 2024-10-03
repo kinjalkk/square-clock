@@ -59,12 +59,12 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
     })
   }
   const update = async () => {
-    if (selectedProject && selectedProject.maxTime > -1 && selectedProject.client && selectedProject.project) {
+    if (selectedProject && selectedProject.maxTime > -1 && selectedProject.client.trim() && selectedProject.project.trim()) {
       const update = await updateProject(
         selectedProject?._id,
         selectedProject.maxTime,
-        selectedProject?.client,
-        selectedProject?.project 
+        selectedProject?.client?.trim(),
+        selectedProject?.project?.trim() 
       );
       if(!update){
         setInvalidCredentails(true);
@@ -76,8 +76,8 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
         refreshTime();
       }
     } else {
-      if( !selectedProject.client || !selectedProject.project ){
-        alert("Client and/or Project feilds are mandatory");
+      if( !selectedProject.client?.trim() || !selectedProject.project?.trim() ){
+        alert("Client and/or Project fields are mandatory");
       } else{
         alert("Hours feild can not be negative")
       }

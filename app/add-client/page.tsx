@@ -75,15 +75,15 @@ const Page = () => {
       setInvalidCredentails(true);
       return false;
     } else {
-      const project = await getProject(values.client, values.project);
+      const project = await getProject(values.client?.trim(), values.project?.trim());
       if (project) {
         setIsProjectExist(true);
       } else {
         try {
           //create project and route push /
           const createProject = await createNewProject(
-            values.client,
-            values.project,
+            values.client?.trim(),
+            values.project?.trim(),
             values.hours ? parseInt(values.hours): 0
           );
           router.push("/");
