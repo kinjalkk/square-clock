@@ -103,7 +103,7 @@ export function TimeTableAdmin() {
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">{row.getValue("projectClient")}</div>
+        <div className="text-center">{row.getValue("projectClient")}</div>
       ),
     },
     {

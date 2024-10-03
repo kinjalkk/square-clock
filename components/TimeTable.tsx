@@ -101,7 +101,7 @@ export function TimeTable({
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize text-center">
+        <div className="text-center">
           {row.getValue("projectClient")}
         </div>
       ),
@@ -311,11 +311,11 @@ export function TimeTable({
             setEndDate(null);
           }}
         >
-          Reset date
+          Reset dates
         </Button>
       </div>
       <div className="flex items-center py-4">
-      <span className="pr-4">Search Client:</span>
+      <span className="pr-4">Search client:</span>
         <Input
           placeholder="Filter client..."
           value={
@@ -326,7 +326,7 @@ export function TimeTable({
           }
           className="max-w-sm text-black"
         />
-        <span className="pr-4 pl-3">Search Project:</span>
+        <span className="pr-4 pl-3">Search project:</span>
         <Input
           placeholder="Filter project"
           value={

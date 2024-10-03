@@ -42,7 +42,7 @@ const Navbar = ({session}:{session:any}) => {
                 className="cursor-pointer"
                 onClick={() => router.push("/add-client")}
               >
-                Add client
+                Add project
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"

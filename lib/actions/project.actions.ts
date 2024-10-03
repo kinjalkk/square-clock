@@ -35,7 +35,7 @@ export async function createNewProject(
 ) {
   try {
     connectToDB();
-    if (!client || !project || !hours) {
+    if (!client || !project) {
       throw new Error("Client or Project or Hours missing");
     }
 

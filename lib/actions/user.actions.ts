@@ -8,7 +8,7 @@ export async function getUserByEmail(email: string): Promise<boolean> {
   try {
     connectToDB();
     const user = await User.findOne({
-      email: email,
+      email: { $regex:new RegExp(`^${email}$`,"i") },
     });
     if (user) {
       return true;
@@ -24,7 +24,7 @@ export async function getUserByUsername(username: string): Promise<boolean> {
   try {
     connectToDB();
     const user = await User.findOne({
-      username: username,
+      username: { $regex:new RegExp(`^${username}$`,"i") },
     });
     if (user) {
       return true;
@@ -44,10 +44,10 @@ export async function getUserByEmailOrUsername(
     const user = await User.findOne({
       $or: [
         {
-          email: username,
+          email: { $regex:new RegExp(`^${username}$`,"i") },
         },
         {
-          username: username,
+          username: { $regex:new RegExp(`^${username}$`,"i") },
         },
       ],
     });
@@ -73,9 +73,9 @@ export async function registerUser(
 
     const hashedPassword = await bcrypt.hash(password, salt);
     const user = await User.create({
-      email: email,
+      email: email.toLowerCase(),
       password: hashedPassword,
-      username: username,
+      username: username.toLowerCase(),
       isAdmin: false,
     });
 
@@ -98,10 +98,10 @@ export async function login(username: string, password: string) {
     const user = await User.findOne({
       $or: [
         {
-          email: username,
+          email: { $regex:new RegExp(`^${username}$`,"i") },
         },
         {
-          username: username,
+          username: { $regex:new RegExp(`^${username}$`,"i") },
         },
       ],
     });
@@ -127,7 +127,7 @@ export async function updatePassword(email: string, password: string) {
 
     const user = await User.findOneAndUpdate(
       {
-        email: email,
+        email: { $regex:new RegExp(`^${email}$`,"i") },
       },
       {
         password: hashedPassword,

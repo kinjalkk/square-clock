@@ -131,7 +131,7 @@ const Page = () => {
                         <PopoverTrigger asChild>
                           <div className="relative">
                             <Input
-                              placeholder="Select or type new client"
+                              placeholder="select or type new client"
                               {...field}
                               className="mt-[2rem] mb-[1rem] h-[3.5rem] rounded-sm bg-zinc-900"
                               onKeyUp={handleKeyUp}
@@ -141,7 +141,7 @@ const Page = () => {
 
                         <PopoverContent className="w-full max-w-xs">
                           <Command>
-                            <CommandInput placeholder="Search client..." />
+                            <CommandInput placeholder="Search client" />
 
                             <CommandList>
                               <CommandEmpty>No client found.</CommandEmpty>
