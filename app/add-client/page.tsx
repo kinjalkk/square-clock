@@ -140,7 +140,7 @@ const Page = () => {
                         </PopoverTrigger>
 
                         <PopoverContent className="w-full max-w-xs">
-                          <Command>
+                          <Command className="max-h-64">
                             <CommandInput placeholder="Search client" />
 
                             <CommandList>

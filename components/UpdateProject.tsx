@@ -100,7 +100,7 @@ const UpdateProject: React.FC<any> = ({ refreshTime }) => {
                   ? clients?.find((client) => client === selectedClient)
                   : "Select client"}
 
-                <ChevronDown className="m1-2 h-4 w-4 shrink-e opacity-50" />
+                <ChevronDown className="ml-2 h-4 w-4 shrink-e opacity-50" />
               </Button>
             </PopoverTrigger>
 
