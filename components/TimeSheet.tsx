@@ -18,9 +18,15 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
 import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
-import { checkActiveTime, getTime,getTimeByDateRangeUser, startTime, stopTime } from "@/lib/actions/time.actions";
-import { TimeSchemaUser,TimeTable } from "./TimeTable";
-const TimeSheet:React.FC<any> = ({session}) => {
+import {
+  checkActiveTime,
+  getTime,
+  getTimeByDateRangeUser,
+  startTime,
+  stopTime,
+} from "@/lib/actions/time.actions";
+import { TimeSchemaUser, TimeTable } from "./TimeTable";
+const TimeSheet: React.FC<any> = ({ session }) => {
   const router = useRouter();
   const [clients, setClients] = React.useState([]);
   const [projects, setProjects] = React.useState<any>([]);
@@ -29,10 +35,12 @@ const TimeSheet:React.FC<any> = ({session}) => {
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
   const [alltimes, setAllTimes] = React.useState<TimeSchemaUser[]>([]);
-  const [description,setDescription]=React.useState("")
+  const [description, setDescription] = React.useState("");
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
-  const [loading,setLoading]=React.useState<boolean>(true)
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [starting, setStarting] = React.useState<boolean>(false);
+
   useEffect(() => {
     (async () => {
       const clientsFormDb = await getAllClients();
@@ -45,44 +53,47 @@ const TimeSheet:React.FC<any> = ({session}) => {
       setProjects(projectsFormDb);
     })();
   }, [selectedClient]);
-  const fetchTimes= async () => {
+  const fetchTimes = async () => {
     setLoading(true);
-    let times:TimeSchemaUser[];
-    if(startDate && endDate){
-      times = await getTimeByDateRangeUser(startDate,endDate,session?.user.id);
-    }else{
+    let times: TimeSchemaUser[];
+    if (startDate && endDate) {
+      times = await getTimeByDateRangeUser(
+        startDate,
+        endDate,
+        session?.user.id
+      );
+    } else {
       times = await getTime(session?.user?.id);
     }
     setAllTimes(times);
     setLoading(false);
-  }
-  React.useEffect(()=>{
-    if(session && ((startDate && endDate) || (!startDate && !endDate))){
+  };
+  React.useEffect(() => {
+    if (session && ((startDate && endDate) || (!startDate && !endDate))) {
       fetchTimes();
     }
-  },[session,startDate,endDate])
+  }, [session, startDate, endDate]);
   const start = async () => {
     const startedTime = await startTime(
       session?.user?.id,
       selectedProject._id,
-      description,
+      description
     );
     setSelectedClient("");
     setSelectedProject(null);
     setDescription("");
-    if(startedTime) fetchTimes();
+    if (startedTime) fetchTimes();
   };
 
-  const stop = async (timeId:string)=>{
-    const stoppedTime= await stopTime(timeId);
-    if(stoppedTime) fetchTimes();
-  }
+  const stop = async (timeId: string) => {
+    const stoppedTime = await stopTime(timeId);
+    if (stoppedTime) fetchTimes();
+  };
 
   return (
-
-      <div className="w-[80%]">
-        <div className="mx-auto gap-6 flex flex-row items-center max-sm:ml-4">
-          <div className="flex">
+    <div className="w-[80%]">
+      <div className="mx-auto gap-6 flex flex-row items-center max-sm:ml-4">
+        <div className="flex">
           <span className="text-white mr-4"> Start work: </span>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -102,7 +113,7 @@ const TimeSheet:React.FC<any> = ({session}) => {
 
             <PopoverContent className="w-[200px]">
               <Command>
-                <CommandInput placeholder="Search client"/>
+                <CommandInput placeholder="Search client" />
 
                 <CommandList>
                   <CommandEmpty>No client found.</CommandEmpty>
@@ -113,11 +124,13 @@ const TimeSheet:React.FC<any> = ({session}) => {
                         key={client}
                         value={client}
                         onSelect={async (currentValue) => {
-                          const onGoingTime=await checkActiveTime(session?.user?.id);
-                          if(onGoingTime){
+                          const onGoingTime = await checkActiveTime(
+                            session?.user?.id
+                          );
+                          if (onGoingTime) {
                             setOpen(false);
                             alert("You have already started a time");
-                            return
+                            return;
                           }
                           setSelectedClient(currentValue);
                           setSelectedProject(null);
@@ -141,83 +154,98 @@ const TimeSheet:React.FC<any> = ({session}) => {
               </Command>
             </PopoverContent>
           </Popover>
-          </div>
-        
-          
-            <Popover open={openProject} onOpenChange={setOpenProject}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={openProject}
-                  className="w-[200px] justify-between"
-                  disabled={!selectedClient}
-                >
-                  {selectedProject?.project
-                    ? projects?.find(
-                        (project:any) =>
-                          project?.project === selectedProject?.project
-                      )?.project
-                    : "Select project"}
-
-                  <ChevronDown className="ml-2 h-4 w-4 shrink-8 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-
-              <PopoverContent className="w-[200px] р-8">
-                <Command>
-                  <CommandInput placeholder="Search project" />
-                  <CommandList>
-                    <CommandEmpty>No project found.</CommandEmpty>
-
-                    <CommandGroup>
-                      {projects.map((project:any) => (
-                        <CommandItem
-                          key={project?.project}
-                          value={project?.project}
-                          onSelect={(currentValue) => {
-                            const projectSelected = projects.find(
-                              (p:any) => p.project === currentValue
-                            );
-                            setSelectedProject(projectSelected);
-                            setOpenProject(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedProject?.project === project?.project
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-
-                          {project?.project}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-         
-
-           
-          
-            <textarea
-            className="border rounded-md p-2 w-full"
-            placeholder="Enter description"
-            value={description}
-            disabled={!selectedProject}
-            onChange={(e)=>setDescription(e.target.value)}
-            />
-            <Button onClick={start} className="bg-red-600" disabled={!selectedProject}>Start</Button>
-         
-          
         </div>
-        <h1 className="text-2xl font-bold mt-8 text-white underline flex justify-center">TimeSheet</h1>
-        <TimeTable stop={stop} times={alltimes} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} loading={loading}/>
+
+        <Popover open={openProject} onOpenChange={setOpenProject}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openProject}
+              className="w-[200px] justify-between"
+              disabled={!selectedClient}
+            >
+              {selectedProject?.project
+                ? projects?.find(
+                    (project: any) =>
+                      project?.project === selectedProject?.project
+                  )?.project
+                : "Select project"}
+
+              <ChevronDown className="ml-2 h-4 w-4 shrink-8 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-[200px] р-8">
+            <Command>
+              <CommandInput placeholder="Search project" />
+              <CommandList>
+                <CommandEmpty>No project found.</CommandEmpty>
+
+                <CommandGroup>
+                  {projects.map((project: any) => (
+                    <CommandItem
+                      key={project?.project}
+                      value={project?.project}
+                      onSelect={(currentValue) => {
+                        const projectSelected = projects.find(
+                          (p: any) => p.project === currentValue
+                        );
+                        setSelectedProject(projectSelected);
+                        setOpenProject(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedProject?.project === project?.project
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+
+                      {project?.project}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        <textarea
+          className="border rounded-md p-2 w-full"
+          placeholder="Enter description"
+          value={description}
+          disabled={!selectedProject}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <Button
+          onClick={async () => {
+            if (!selectedProject) return;
+            if (starting) return;
+            setStarting(true);
+            await start();
+            setStarting(false);
+          }}
+          className="bg-red-600"
+          disabled={!selectedProject || starting}
+        >
+          Start
+        </Button>
       </div>
+      <h1 className="text-2xl font-bold mt-8 text-white underline flex justify-center">
+        TimeSheet
+      </h1>
+      <TimeTable
+        stop={stop}
+        times={alltimes}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        loading={loading}
+      />
+    </div>
   );
 };
 export default TimeSheet;
