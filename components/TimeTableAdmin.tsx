@@ -13,7 +13,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, CircleStop, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  CircleStop,
+  MoreHorizontal,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -38,28 +43,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import * as XLSX from "exceljs";
-import { getAllTimes,getTimeByDateRange, stopTime } from "@/lib/actions/time.actions";
+import {
+  getAllTimes,
+  getTimeByDateRange,
+  stopTime,
+} from "@/lib/actions/time.actions";
 import LiveTimer from "./LiveTimer";
 import UpdateProject from "./UpdateProject";
 import Loader from "./Loader";
 
-
 export type TimeSchema = {
   _id: string;
-  user:string;
-  project:string;
+  user: string;
+  project: string;
   hours: number;
-  description:string;
+  description: string;
   checkInTime: string;
   checkOutTime: string;
-  __v:number;
-  projectClient:string;
-  projectName:string;
-  projectMaxTime:number;
-  userName:string;
-  userEmail:string;
+  __v: number;
+  projectClient: string;
+  projectName: string;
+  projectMaxTime: number;
+  userName: string;
+  userEmail: string;
 };
-
 
 export function TimeTableAdmin() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -71,21 +78,22 @@ export function TimeTableAdmin() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [startDate, setStartDate] = React.useState<Date | null>(null);
   const [endDate, setEndDate] = React.useState<Date | null>(null);
-  const [data,setData]=React.useState<TimeSchema[]>([]);
-  const [isPickUpStartOpen,setIsPickUpStartOpen]=React.useState<boolean>(false);
-  const [isEndDateOpen,setIsEndDateOpen]=React.useState<boolean>(false);
-  const [loading,setLoading]=React.useState<boolean>(false);
-  const getTimes=async ()=>{
+  const [data, setData] = React.useState<TimeSchema[]>([]);
+  const [isPickUpStartOpen, setIsPickUpStartOpen] =
+    React.useState<boolean>(false);
+  const [isEndDateOpen, setIsEndDateOpen] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const getTimes = async () => {
     setLoading(true);
-    let allTimes:TimeSchema[];
-    if(startDate && endDate){
-      allTimes= await getTimeByDateRange(startDate,endDate);
-    } else{
-      allTimes=await getAllTimes();
+    let allTimes: TimeSchema[];
+    if (startDate && endDate) {
+      allTimes = await getTimeByDateRange(startDate, endDate);
+    } else {
+      allTimes = await getAllTimes();
     }
     setData(allTimes);
     setLoading(false);
-  }
+  };
 
   const columns: ColumnDef<TimeSchema>[] = [
     {
@@ -118,7 +126,7 @@ export function TimeTableAdmin() {
               <TooltipTrigger className="text-white">
                 {row.getValue("projectName")}
               </TooltipTrigger>
-  
+
               <TooltipContent>
                 <p>
                   <span className="font-bold">Total allotted:</span>{" "}
@@ -152,14 +160,20 @@ export function TimeTableAdmin() {
     },
     {
       accessorKey: "userName",
-      header: () => <div className="text-center font-bold text-white">User</div>,
+      header: () => (
+        <div className="text-center font-bold text-white">User</div>
+      ),
       cell: ({ row }) => (
-        <div className="text-center font-medium">{row.getValue("userName")}</div>
+        <div className="text-center font-medium">
+          {row.getValue("userName")}
+        </div>
       ),
     },
     {
       accessorKey: "checkInTime",
-      header: () => <div className="text-center font-bold text-white">Date</div>,
+      header: () => (
+        <div className="text-center font-bold text-white">Date</div>
+      ),
       cell: ({ row }) => (
         <div className="text-center font-medium lowercase">
           {new Date(row.original.checkInTime).toLocaleString("en-US", {
@@ -173,33 +187,41 @@ export function TimeTableAdmin() {
     },
     {
       accessorKey: "hours",
-      header: () => <div className="text-center font-bold text-white">Hours</div>,
+      header: () => (
+        <div className="text-center font-bold text-white">Hours</div>
+      ),
       cell: ({ row }) => (
         <div className="text-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="text-white">
-              {row.getValue("hours")===0?(
-                  <LiveTimer checkInTime={row.original.checkInTime}/>):(
-                    row.getValue("hours")
+                {row.getValue("hours") === 0 ? (
+                  <LiveTimer checkInTime={row.original.checkInTime} />
+                ) : (
+                  row.getValue("hours")
                 )}
               </TooltipTrigger>
-  
+
               <TooltipContent className="text-left">
                 <p>
                   <span className="font-bold">Start time:</span>{" "}
                   {new Date(row.original.checkInTime).toLocaleString("en-US", {
                     hour: "numeric",
-                    minute:"numeric",
+                    minute: "numeric",
                   })}
                 </p>
-  
+
                 <p>
                   <span className="font-bold">End time: </span>{" "}
-                  {row.original.checkOutTime?new Date(row.original.checkOutTime).toLocaleString("en-US", {
-                    hour: "numeric",
-                    minute:"numeric",
-                  }):"Not ended"}
+                  {row.original.checkOutTime
+                    ? new Date(row.original.checkOutTime).toLocaleString(
+                        "en-US",
+                        {
+                          hour: "numeric",
+                          minute: "numeric",
+                        }
+                      )
+                    : "Not ended"}
                 </p>
                 <p className="w-72">
                   <span className="font-bold">Description:</span>{" "}
@@ -215,13 +237,17 @@ export function TimeTableAdmin() {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        return (
-          row.original.hours===0? (
-          <Button variant="ghost" className="h-8 w-8 p-0 bg-red-600" onClick={()=>stop(row.original._id)}>
-                <CircleStop className="h-4 w-4" />
-              </Button>):(<></>)
-          
-        )
+        return row.original.hours === 0 ? (
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0 bg-red-600"
+            onClick={() => stop(row.original._id)}
+          >
+            <CircleStop className="h-4 w-4" />
+          </Button>
+        ) : (
+          <></>
+        );
       },
     },
   ];
@@ -243,11 +269,11 @@ export function TimeTableAdmin() {
       rowSelection,
     },
   });
-  React.useEffect(()=>{
-    if((startDate && endDate) || (!startDate && !endDate)){
-    getTimes();
+  React.useEffect(() => {
+    if ((startDate && endDate) || (!startDate && !endDate)) {
+      getTimes();
     }
-  },[startDate,endDate])
+  }, [startDate, endDate]);
   const format = (date: Date, format: string): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -256,16 +282,16 @@ export function TimeTableAdmin() {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
-  const stop=async (timeId:string)=>{
-    const stoppedTime=await stopTime(timeId);
-    stoppedTime && getTimes()
-  }
+  const stop = async (timeId: string) => {
+    const stoppedTime = await stopTime(timeId);
+    stoppedTime && getTimes();
+  };
   const handleSelectDate = (date: Date) => {
-    if(date>new Date()){
+    if (date > new Date()) {
       alert("Start date cannot be a future date.");
       return;
     }
-    if(endDate && date>endDate){
+    if (endDate && date > endDate) {
       alert("Start date cannot be later than end date.");
       return;
     }
@@ -274,11 +300,11 @@ export function TimeTableAdmin() {
   };
 
   const handleSelectEndDate = (date: Date) => {
-    if(date> new Date()){
+    if (date > new Date()) {
       alert("End date cannot be a future date.");
       return;
     }
-    if(startDate && date<startDate){
+    if (startDate && date < startDate) {
       alert("End date cannot be earlier than Start date.");
       return;
     }
@@ -329,15 +355,14 @@ export function TimeTableAdmin() {
   };
   return (
     <div className="w-full text-white">
-        <UpdateProject refreshTime={getTimes}/>
-        <h1 className="text-2xl font-bold mt-4 text-white underline flex justify-center">Timesheet</h1>
+      <UpdateProject refreshTime={getTimes} />
+      <h1 className="text-2xl font-bold mt-4 text-white underline flex justify-center">
+        Timesheet
+      </h1>
       <div className="flex justify-between pt-8">
         <Popover open={isPickUpStartOpen} onOpenChange={setIsPickUpStartOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className="w-1/4 text-black"
-            >
+            <Button variant={"outline"} className="w-1/4 text-black">
               <CalendarIcon className="mr-2 h-4 w-4" />
               {startDate ? (
                 format(startDate, "PPP")
@@ -346,9 +371,7 @@ export function TimeTableAdmin() {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent
-            className={`w-auto p-0`}
-          >
+          <PopoverContent className={`w-auto p-0`}>
             <Calendar
               mode="single"
               selected={startDate ?? undefined}
@@ -360,17 +383,12 @@ export function TimeTableAdmin() {
 
         <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className="w-1/4 text-black"
-            >
+            <Button variant={"outline"} className="w-1/4 text-black">
               <CalendarIcon className="mr-2 h-4 w-4" />
               {endDate ? format(endDate, "PPP") : <span>Pick end date</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent
-            className={`w-auto p-0`}
-          >
+          <PopoverContent className={`w-auto p-0`}>
             <Calendar
               mode="single"
               selected={endDate ?? undefined}
@@ -379,13 +397,19 @@ export function TimeTableAdmin() {
             />
           </PopoverContent>
         </Popover>
-        <Button variant="outline" className="w-1/4 bg-red-600" onClick={()=>{
-        setStartDate(null);
-        setEndDate(null);
-      }}>Reset dates</Button>
+        <Button
+          variant="outline"
+          className="w-1/4 bg-red-600"
+          onClick={() => {
+            setStartDate(null);
+            setEndDate(null);
+          }}
+        >
+          Reset dates
+        </Button>
       </div>
       <div className="flex items-center py-4">
-      <span className="pr-4">Search client:</span>
+        <span className="pr-4">Search client:</span>
         <Input
           placeholder="Filter client"
           value={
@@ -440,8 +464,7 @@ export function TimeTableAdmin() {
             ))}
           </TableHeader>
           <TableBody>
-            {loading?
-             (
+            {loading ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
@@ -452,8 +475,7 @@ export function TimeTableAdmin() {
                   </div>
                 </TableCell>
               </TableRow>
-            )
-            : table.getRowModel().rows?.length ? (
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -487,7 +509,8 @@ export function TimeTableAdmin() {
           Total Hours:{" "}
           {table
             .getFilteredRowModel()
-            .rows.reduce((total, row) => total + row.original.hours, 0).toFixed(2)}
+            .rows.reduce((total, row) => total + row.original.hours, 0)
+            .toFixed(2)}
           <Button
             variant="outline"
             size="sm"
