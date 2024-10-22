@@ -143,3 +143,15 @@ export async function updatePassword(email: string, password: string) {
     console.log("user.actions: Error updating password", error);
   }
 }
+
+export async function getAllUsers(){
+  try{
+      connectToDB();
+      const users=await User.find({},'username');
+      const usernames= users.map(user=>user.username);
+      return usernames;
+  } catch (error){
+    console.log("user.actions: Error fetching users",error);
+    
+  }
+}

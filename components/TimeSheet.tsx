@@ -40,7 +40,20 @@ const TimeSheet: React.FC<any> = ({ session }) => {
   const [endDate, setEndDate] = React.useState<Date | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [starting, setStarting] = React.useState<boolean>(false);
-
+  const [openDescription, setOpenDescription] = React.useState<boolean>(false);
+  const descriptions: string[] = [
+    "Client and Consultant Coordination",
+    "Concept Presentation",
+    "Design Development",
+    "Generic Vendor Meet",
+    "Material and Product Selection",
+    "Miscellaneous",
+    "Project Vendor Meet",
+    "Recess",
+    "Seminar and Workshop",
+    "Site Visit",
+    "Working Drawing",
+  ];
   useEffect(() => {
     (async () => {
       const clientsFormDb = await getAllClients();
@@ -212,13 +225,44 @@ const TimeSheet: React.FC<any> = ({ session }) => {
             </Command>
           </PopoverContent>
         </Popover>
-        <textarea
-          className="border rounded-md p-2 w-full"
-          placeholder="Enter description"
-          value={description}
-          disabled={!selectedProject}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <Popover open={openDescription} onOpenChange={setOpenDescription}>
+          <PopoverTrigger asChild>
+            <div className="relative w-96">
+              <textarea
+                className="border rounded-md p-2 w-full"
+                placeholder="Enter description"
+                value={description}
+                disabled={!selectedProject}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-full max-w-xs">
+            <Command>
+              <CommandInput placeholder="Search description" />
+
+              <CommandList>
+                <CommandEmpty>No description found</CommandEmpty>
+
+                <CommandGroup>
+                  {descriptions?.map((description) => (
+                    <CommandItem
+                      key={description}
+                      value={description}
+                      onSelect={(currentValue) => {
+                        setDescription(currentValue);
+                        setOpenDescription(false);
+                      }}
+                    >
+                      {description}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
         <Button
           onClick={async () => {
             if (!selectedProject) return;

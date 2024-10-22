@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-table";
 import {
   ArrowUpDown,
+  Check,
   ChevronDown,
   CircleStop,
   MoreHorizontal,
@@ -51,6 +52,17 @@ import {
 import LiveTimer from "./LiveTimer";
 import UpdateProject from "./UpdateProject";
 import Loader from "./Loader";
+import { getAllClients, getAllProjects } from "@/lib/actions/project.actions";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
+import { getAllUsers } from "@/lib/actions/user.actions";
 
 export type TimeSchema = {
   _id: string;
@@ -83,6 +95,36 @@ export function TimeTableAdmin() {
     React.useState<boolean>(false);
   const [isEndDateOpen, setIsEndDateOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [clients, setClients] = React.useState([]);
+  const [users, setUsers] = React.useState<any[]>([]);
+  const [projects, setProjects] = React.useState<any[]>([]);
+  const [selectedClient, setSelectedClient] = React.useState("");
+  const [selectedUser, setSelectedUser] = React.useState("");
+  const [selectedProject, setSelectedProject] = React.useState<any | null>();
+  const [open, setOpen] = React.useState(false);
+  const [openProject, setOpenProject] = React.useState(false);
+  const [openUser, setOpenUser] = React.useState(false);
+
+  const getClients = async () => {
+    const clientsFormDb = await getAllClients();
+    setClients(clientsFormDb);
+  };
+const getUsers= async ()=>{
+  const allUsers=await getAllUsers();
+  setUsers(allUsers ||[]);
+};
+  React.useEffect(() => {
+    getClients();
+  }, []);
+  React.useEffect(() => {
+    getUsers();
+  }, []);
+  React.useEffect(() => {
+    (async () => {
+      const projectsFormDb = await getAllProjects(selectedClient);
+      setProjects(projectsFormDb);
+    })();
+  }, [selectedClient]);
   const getTimes = async () => {
     setLoading(true);
     let allTimes: TimeSchema[];
@@ -409,39 +451,230 @@ export function TimeTableAdmin() {
         </Button>
       </div>
       <div className="flex items-center py-4">
-        <span className="pr-4">Search client:</span>
-        <Input
-          placeholder="Filter client"
-          value={
-            (table.getColumn("projectClient")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("projectClient")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm text-black"
-        />
-        <span className="pr-4 pl-3">Search project:</span>
-        <Input
-          placeholder="Filter project"
-          value={
-            (table.getColumn("projectName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("projectName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm text-black"
-        />
-        <span className="pl-5 pr-4">Search user:</span>
-        <Input
-          placeholder="Filter user"
-          value={
-            (table.getColumn("userName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("userName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm text-black mr-8"
-        />
+        <span className="pr-4">Client:</span>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-96 overflow-hidden justify-between text-black"
+            >
+              {selectedClient
+                ? clients?.find((client) => client === selectedClient)
+                : "Select client"}
+
+              <ChevronDown className="ml-2 h-4 w-4 shrink-e opacity-50" />
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-full max-w-xs text-black">
+            <Command>
+              <CommandInput placeholder="Search client..." />
+
+              <CommandList>
+                <CommandEmpty>No client found.</CommandEmpty>
+
+                <CommandGroup>
+                  <CommandItem
+                    key={""}
+                    value={""}
+                    onSelect={() => {
+                      setSelectedClient("");
+                      setSelectedProject(null);
+                      table.getColumn("projectName")?.setFilterValue("");
+                      table.getColumn("projectClient")?.setFilterValue("");
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+
+                        selectedClient === "" ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    Select client
+                  </CommandItem>
+                  {clients?.map((client) => (
+                    <CommandItem
+                      key={client}
+                      value={client}
+                      onSelect={(currentValue) => {
+                        setSelectedClient(currentValue);
+                        setSelectedProject(null);
+                        table.getColumn("projectName")?.setFilterValue("");
+                        table
+                          .getColumn("projectClient")
+                          ?.setFilterValue(currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+
+                          selectedClient === client
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {client}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        <span className="pr-4 pl-3">Project:</span>
+        <Popover open={openProject} onOpenChange={setOpenProject}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openProject}
+              className="w-96 overflow-hidden justify-between text-black"
+            >
+              {selectedProject?.project
+                ? projects?.find(
+                    (project: any) =>
+                      project?.project === selectedProject?.project
+                  )?.project
+                : "Select project"}
+
+              <ChevronDown className="ml-2 h-4 w-4 shrink-8 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-full max-w-xs">
+            <Command>
+              <CommandInput placeholder="Search project..." />
+
+              <CommandList>
+                <CommandEmpty>No project found.</CommandEmpty>
+
+                <CommandGroup>
+                  <CommandItem
+                    key={""}
+                    value={""}
+                    onSelect={() => {
+                      table.getColumn("projectName")?.setFilterValue("");
+                      setSelectedProject(null);
+                      setOpenProject(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+
+                        !selectedProject ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    Select project
+                  </CommandItem>
+                  {projects?.map((project) => (
+                    <CommandItem
+                      key={project.project}
+                      value={project.project}
+                      onSelect={(currentValue) => {
+                        const projectSelected = projects.find(
+                          (p) => p?.project === currentValue
+                        );
+                        table
+                          .getColumn("projectName")
+                          ?.setFilterValue(project?.project);
+                        setSelectedProject(projectSelected);
+                        setOpenProject(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+
+                          selectedProject?.project === project?.project
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {project?.project}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        <span className="pl-5 pr-4">User:</span>
+        <Popover open={openUser} onOpenChange={setOpenUser}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openUser}
+              className="w-96 overflow-hidden justify-between text-black"
+            >
+              {selectedUser
+                ? users?.find((user) => user === selectedUser)
+                : "Select user"}
+
+              <ChevronDown className="ml-2 h-4 w-4 shrink-e opacity-50" />
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-full max-w-xs text-black">
+            <Command>
+              <CommandInput placeholder="Search user..." />
+
+              <CommandList>
+                <CommandEmpty>No user found.</CommandEmpty>
+
+                <CommandGroup>
+                  <CommandItem
+                    key={""}
+                    value={""}
+                    onSelect={() => {
+                      setSelectedUser("");
+                      table.getColumn("userName")?.setFilterValue("");
+                      setOpenUser(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+
+                        selectedUser === "" ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    Select user
+                  </CommandItem>
+                  {users?.map((user) => (
+                    <CommandItem
+                      key={user}
+                      value={user}
+                      onSelect={(currentValue) => {
+                        setSelectedUser(currentValue);
+                        table.getColumn("userName")?.setFilterValue(currentValue);
+                        setOpenUser(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+
+                          selectedUser === user
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {user}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="rounded-md border">
         <Table>
