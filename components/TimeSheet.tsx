@@ -43,18 +43,16 @@ const TimeSheet: React.FC<any> = ({ session }) => {
   const [openDescription, setOpenDescription] = React.useState<boolean>(false);
   const descriptions: string[] = [
     "Client and Consultant Coordination",
-    "Concept",
-    "Development",
-    "Drawing",
+    "Concept Presentation",
+    "Design Development",
+    "Generic Vendor Meet",
     "Material and Product Selection",
     "Miscellaneous",
-    "Presentation",
-    "Project",
+    "Project Vendor Meet",
     "Recess",
     "Seminar and Workshop",
     "Site Visit",
-    "Vendor Meet",
-    "Working",
+    "Working Drawing",
   ];
   useEffect(() => {
     (async () => {
@@ -229,7 +227,7 @@ const TimeSheet: React.FC<any> = ({ session }) => {
         </Popover>
         <Popover open={openDescription} onOpenChange={setOpenDescription}>
           <PopoverTrigger asChild>
-            <div className="relative">
+            <div className="relative w-96">
               <textarea
                 className="border rounded-md p-2 w-full"
                 placeholder="Enter description"
