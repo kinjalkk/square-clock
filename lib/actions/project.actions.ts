@@ -54,14 +54,12 @@ export async function createNewProject(
     console.log("project.actions:Error creating project", error);
   }
 }
-export async function getAllProjects(client: string) {
+export async function getAllProjects(client?: string) {
   try {
     connectToDB();
 
-    const projects = await Project.find({
-      client: client,
-    });
-
+    const query=client ? {client:client} :{};
+    const projects = await Project.find(query);
     if (projects) {
       return JSON.parse(JSON.stringify(projects));
     } else {
