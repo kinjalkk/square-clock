@@ -62,6 +62,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { getAllUsers } from "@/lib/actions/user.actions";
 
 export type TimeSchema = {
   _id: string;
@@ -95,18 +96,28 @@ export function TimeTableAdmin() {
   const [isEndDateOpen, setIsEndDateOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [clients, setClients] = React.useState([]);
+  const [users, setUsers] = React.useState<any[]>([]);
   const [projects, setProjects] = React.useState<any[]>([]);
   const [selectedClient, setSelectedClient] = React.useState("");
+  const [selectedUser, setSelectedUser] = React.useState("");
   const [selectedProject, setSelectedProject] = React.useState<any | null>();
   const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
+  const [openUser, setOpenUser] = React.useState(false);
+
   const getClients = async () => {
     const clientsFormDb = await getAllClients();
     setClients(clientsFormDb);
   };
-
+const getUsers= async ()=>{
+  const allUsers=await getAllUsers();
+  setUsers(allUsers ||[]);
+};
   React.useEffect(() => {
     getClients();
+  }, []);
+  React.useEffect(() => {
+    getUsers();
   }, []);
   React.useEffect(() => {
     (async () => {
@@ -440,7 +451,7 @@ export function TimeTableAdmin() {
         </Button>
       </div>
       <div className="flex items-center py-4">
-        <span className="pr-4">Select client:</span>
+        <span className="pr-4">Client:</span>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -471,6 +482,7 @@ export function TimeTableAdmin() {
                     onSelect={() => {
                       setSelectedClient("");
                       setSelectedProject(null);
+                      table.getColumn("projectName")?.setFilterValue("");
                       table.getColumn("projectClient")?.setFilterValue("");
                       setOpen(false);
                     }}
@@ -491,6 +503,7 @@ export function TimeTableAdmin() {
                       onSelect={(currentValue) => {
                         setSelectedClient(currentValue);
                         setSelectedProject(null);
+                        table.getColumn("projectName")?.setFilterValue("");
                         table
                           .getColumn("projectClient")
                           ?.setFilterValue(currentValue);
@@ -514,24 +527,14 @@ export function TimeTableAdmin() {
             </Command>
           </PopoverContent>
         </Popover>
-        <span className="pr-4 pl-3">Select project:</span>
-        <Input
-          placeholder="Filter project"
-          value={
-            (table.getColumn("projectName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("projectName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm text-black"
-        />
+        <span className="pr-4 pl-3">Project:</span>
         <Popover open={openProject} onOpenChange={setOpenProject}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
               aria-expanded={openProject}
-              className="w-[200px] justify-between"
+              className="w-[200px] justify-between text-black"
             >
               {selectedProject?.project
                 ? projects?.find(
@@ -602,17 +605,76 @@ export function TimeTableAdmin() {
             </Command>
           </PopoverContent>
         </Popover>
-        <span className="pl-5 pr-4">Search user:</span>
-        <Input
-          placeholder="Filter user"
-          value={
-            (table.getColumn("userName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("userName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm text-black mr-8"
-        />
+        <span className="pl-5 pr-4">User:</span>
+        <Popover open={openUser} onOpenChange={setOpenUser}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openUser}
+              className="w-[200px] justify-between text-black"
+            >
+              {selectedUser
+                ? users?.find((user) => user === selectedUser)
+                : "Select user"}
+
+              <ChevronDown className="ml-2 h-4 w-4 shrink-e opacity-50" />
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-full max-w-xs text-black">
+            <Command>
+              <CommandInput placeholder="Search user..." />
+
+              <CommandList>
+                <CommandEmpty>No user found.</CommandEmpty>
+
+                <CommandGroup>
+                  <CommandItem
+                    key={""}
+                    value={""}
+                    onSelect={() => {
+                      setSelectedUser("");
+                      table.getColumn("userName")?.setFilterValue("");
+                      setOpenUser(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+
+                        selectedUser === "" ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    Select user
+                  </CommandItem>
+                  {users?.map((user) => (
+                    <CommandItem
+                      key={user}
+                      value={user}
+                      onSelect={(currentValue) => {
+                        setSelectedUser(currentValue);
+                        table.getColumn("userName")?.setFilterValue(currentValue);
+                        setOpenUser(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+
+                          selectedUser === user
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {user}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="rounded-md border">
         <Table>
