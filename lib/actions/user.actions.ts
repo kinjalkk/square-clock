@@ -148,7 +148,8 @@ export async function getAllUsers(){
   try{
       connectToDB();
       const users=await User.find({},'username');
-      return users;
+      const usernames= users.map(user=>user.username);
+      return usernames;
   } catch (error){
     console.log("user.actions: Error fetching users",error);
     

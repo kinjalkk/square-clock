@@ -458,7 +458,7 @@ const getUsers= async ()=>{
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[200px] justify-between text-black"
+              className="w-96 overflow-hidden justify-between text-black"
             >
               {selectedClient
                 ? clients?.find((client) => client === selectedClient)
@@ -534,7 +534,7 @@ const getUsers= async ()=>{
               variant="outline"
               role="combobox"
               aria-expanded={openProject}
-              className="w-[200px] justify-between text-black"
+              className="w-96 overflow-hidden justify-between text-black"
             >
               {selectedProject?.project
                 ? projects?.find(
@@ -612,7 +612,7 @@ const getUsers= async ()=>{
               variant="outline"
               role="combobox"
               aria-expanded={openUser}
-              className="w-[200px] justify-between text-black"
+              className="w-96 overflow-hidden justify-between text-black"
             >
               {selectedUser
                 ? users?.find((user) => user === selectedUser)
