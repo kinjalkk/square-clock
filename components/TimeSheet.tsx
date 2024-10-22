@@ -227,13 +227,6 @@ const TimeSheet: React.FC<any> = ({ session }) => {
             </Command>
           </PopoverContent>
         </Popover>
-        <textarea
-          className="border rounded-md p-2 w-full"
-          placeholder="Enter description"
-          value={description}
-          disabled={!selectedProject}
-          onChange={(e) => setDescription(e.target.value)}
-        />
         <Popover open={openDescription} onOpenChange={setOpenDescription}>
           <PopoverTrigger asChild>
             <div className="relative">
