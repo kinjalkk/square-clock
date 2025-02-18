@@ -12,7 +12,9 @@ const timeSchema = new mongoose.Schema({
     },
     checkInTime:{
         type:Date,
-        default:Date.now
+        default:Date.now,
+        required:true,
+        index:true
     },
     checkOutTime:{
         type:Date
