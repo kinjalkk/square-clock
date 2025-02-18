@@ -72,7 +72,11 @@ export async function getTime(userId: string) {
 export async function getAllTimes() {
   try{
     connectToDB();
-    const time=await Time.find({}).sort({checkInTime:-1});
+    const thirtyDaysAgo=new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() -30);
+    const time=await Time.find({
+      checkInTime:{ $gte: thirtyDaysAgo }
+    }).sort({checkInTime:-1});
     if (time) {
       const populateTimes= await Promise.all(
         time.map(async (t)=>{
