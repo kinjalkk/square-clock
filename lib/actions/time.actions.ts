@@ -50,10 +50,10 @@ export async function getTime(userId: string) {
     const oneYearAgo=new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1);
     let currentStart=oneYearAgo;
-    const msIn6Months=6*30*24*60*60*1000;
+    const msIn3Months=3*30*24*60*60*1000;
     const endDate=new Date();
     while (currentStart <endDate){
-      const currentEnd=new Date(Math.min(currentStart.getTime()+msIn6Months,endDate.getTime()));
+      const currentEnd=new Date(Math.min(currentStart.getTime()+msIn3Months,endDate.getTime()));
     const time = await Time.find({
       user: userId,
       checkInTime:{$gte : currentStart,$lt:new Date(currentEnd.getTime()+24*60*60*1000)},
@@ -117,9 +117,9 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
     connectToDB();
     const results:any[]=[];
     let currentStart= new Date (startDate);
-    const msIn3Months=3*30*24*60*60*1000;
+    const msIn2Months=2*30*24*60*60*1000;
     while (currentStart < endDate) {
-      const currentEnd= new Date(Math.min(currentStart.getTime()+ msIn3Months, endDate.getTime()));
+      const currentEnd= new Date(Math.min(currentStart.getTime()+ msIn2Months, endDate.getTime()));
     const time =await Time.find({
       checkInTime:{ $gte: currentStart, $lt:new Date(currentEnd.getTime()+24*60*60*1000)},
     });
@@ -157,10 +157,10 @@ export async function getTimeByDateRangeUser(startDate: Date, endDate: Date, use
   connectToDB();
   const results: any[]=[];
   let currentStart=new Date(startDate);
-  const msIn6Months= 6*30*24*60*60*1000;
+  const msIn3Months= 3*30*24*60*60*1000;
 
   while(currentStart < endDate) {
-    const currentEnd = new Date(Math.min(currentStart.getTime() + msIn6Months,endDate.getTime()));
+    const currentEnd = new Date(Math.min(currentStart.getTime() + msIn3Months,endDate.getTime()));
   const time = await Time.find({
     user: userId,
     checkInTime: { $gte: currentStart, $lt: new Date(currentEnd.getTime() + 24 * 60 * 60 * 1000) }, 
