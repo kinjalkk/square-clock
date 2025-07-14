@@ -46,108 +46,148 @@ export async function stopTime(timeId:string){
 export async function getTime(userId: string) {
   try {
     connectToDB();
-    const results:any[]=[];
-    const oneYearAgo=new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1);
-    let currentStart=oneYearAgo;
-    const msIn3Months=3*30*24*60*60*1000;
-    const endDate=new Date();
-    while (currentStart <endDate){
-      const currentEnd=new Date(Math.min(currentStart.getTime()+msIn3Months,endDate.getTime()));
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const endDate = new Date();
+
+    // Fetch all times for the user in one query
     const time = await Time.find({
       user: userId,
-      checkInTime:{$gte : currentStart,$lt:new Date(currentEnd.getTime()+24*60*60*1000)},
-    });
-    if (time && time.length>0) {
-      const populateTimes= await Promise.all(
-        time.map(async (t)=>{
-          const project=await Project.findById(t.project).select("client project maxTime");
-          return{
-            ...t.toObject(),
-            projectClient:project?.client,
-            projectName:project?.project,
-            projectMaxTime:project?.maxTime,
-          };
-        })
-      );
-      results.push(...populateTimes);
-    }
-    currentStart=new Date(currentEnd.getTime()+1);
-  }
-  results.sort((a,b)=>new Date(b.checkInTime).getTime()-new Date(a.checkInTime).getTime());
+
+      checkinTime: {
+        $gte: oneYearAgo,
+        $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000),
+      },
+    })
+      .sort({ checkintime: -1 })
+      .lean();
+
+    if (time.length === 0) return [];
+
+    // Collect unique project IDs
+
+    const projectIds = [...new Set(time.map((t) => t.project?.toString()))];
+
+    // Fetch all projects in bulk
+
+    const projects = await Project.find({ _id: { $in: projectIds } })
+      .select("client project maxTime")
+      .lean();
+
+    // Create lookup map
+
+    const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
+
+    // Populate times
+
+    const results = time.map((t) => ({
+      ...t,
+      projectClient: projectMap.get(t.project?.toString())?.client,
+      projectName: projectMap.get(t.project?.toString())?.project,
+      projectMaxTime: projectMap.get(t.project?.toString())?.maxTime,
+    }));
+
     return JSON.parse(JSON.stringify(results));
   } catch (error) {
     console.log("time.actions: Error fetching time", error);
   }
-
   return [];
 }
+
 export async function getAllTimes() {
   try{
     connectToDB();
     const thirtyDaysAgo=new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() -30);
-    const time=await Time.find({
-      checkInTime:{ $gte: thirtyDaysAgo }
-    }).sort({checkInTime:-1});
-    if (time) {
-      const populateTimes= await Promise.all(
-        time.map(async (t)=>{
-          const project=await Project.findById(t.project).select("client project maxTime");
-          const user=await User.findById(t.user).select("username email")
-          return{
-            ...t.toObject(),
-            projectClient:project?.client,
-            projectName:project?.project,
-            projectMaxTime:project?.maxTime,
-            userName:user?.username,
-            userEmail:user?.email,
-          }
-        })
-      )
-      return JSON.parse(JSON.stringify(populateTimes));
-    }
-  }catch (error){
-    console.log("time.actions: Error fetching time",error);
+    const time = await Time.find({
+      checkinTime: {
+        $gte: thirtyDaysAgo
+      }
+    })
+      .sort({ checkintime: -1 })
+      .lean();
+    if (time.length === 0) return [];
+
+    // Collect unique project IDs
+
+    const projectIds = [...new Set(time.map((t) => t.project?.toString()))];
+
+    const userIds=[...new Set(time.map((t) => t.user?.toString()))]
+
+    const projects = await Project.find({ _id: { $in: projectIds } })
+      .select("client project maxTime")
+      .lean();
+const users = await User.find({ _id: { $in: userIds } })
+      .select("username email")
+      .lean();
+    // Create lookup map
+
+    const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
+    const userMap = new Map(projects.map((u) => [u._id.toString(), u]));
+
+
+    // Populate times
+
+    const results = time.map((t) => ({
+      ...t,
+      projectClient: projectMap.get(t.project?.toString())?.client,
+      projectName: projectMap.get(t.project?.toString())?.project,
+      projectMaxTime: projectMap.get(t.project?.toString())?.maxTime,
+      userName:userMap.get(t.user?.toString())?.username,
+      userEmail:userMap.get(t.user?.toString())?.email,
+    }));
+
+    return JSON.parse(JSON.stringify(results));
+  } catch (error) {
+    console.log("time.actions: Error fetching time", error);
   }
   return [];
 }
 export async function getTimeByDateRange(startDate:Date,endDate:Date){
   try{
     connectToDB();
-    const results:any[]=[];
-    let currentStart= new Date (startDate);
-    const msIn2Months=2*30*24*60*60*1000;
-    while (currentStart < endDate) {
-      const currentEnd= new Date(Math.min(currentStart.getTime()+ msIn2Months, endDate.getTime()));
-    const time =await Time.find({
-      checkInTime:{ $gte: currentStart, $lt:new Date(currentEnd.getTime()+24*60*60*1000)},
-    });
-    if (time && time.length > 0) {
-      const populateTimes= await Promise.all(
-        time.map(async (t)=>{
-          const project=await Project.findById(t.project).select("client project maxTime");
-          const user=await User.findById(t.user).select("username email")
-          return{
-            ...t.toObject(),
-            projectClient:project?.client,
-            projectName:project?.project,
-            projectMaxTime:project?.maxTime,
-            userName:user?.username,
-            userEmail:user?.email,
-          };
-        })
-      );
-      results.push(...populateTimes);
-    }
-    currentStart=new Date (currentEnd.getTime()+1);
-  }
-  results.sort((a,b)=>new Date(b.checkInTime).getTime()-new Date(a.checkInTime).getTime());
+    const time = await Time.find({
+      checkinTime: {
+        $gte: startDate,
+        $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000),
+      },
+    })
+      .sort({ checkintime: -1 })
+      .lean();
+    if (time.length === 0) return [];
 
-      return JSON.parse(JSON.stringify(results));
-    
-  } catch(error){
-    console.log("time.actions: error fetching time",error);
+    // Collect unique project IDs
+
+    const projectIds = [...new Set(time.map((t) => t.project?.toString()))];
+
+    const userIds=[...new Set(time.map((t) => t.user?.toString()))]
+
+    const projects = await Project.find({ _id: { $in: projectIds } })
+      .select("client project maxTime")
+      .lean();
+const users = await User.find({ _id: { $in: userIds } })
+      .select("username email")
+      .lean();
+    // Create lookup map
+
+    const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
+    const userMap = new Map(projects.map((u) => [u._id.toString(), u]));
+
+
+    // Populate times
+
+    const results = time.map((t) => ({
+      ...t,
+      projectClient: projectMap.get(t.project?.toString())?.client,
+      projectName: projectMap.get(t.project?.toString())?.project,
+      projectMaxTime: projectMap.get(t.project?.toString())?.maxTime,
+      userName:userMap.get(t.user?.toString())?.username,
+      userEmail:userMap.get(t.user?.toString())?.email,
+    }));
+
+    return JSON.parse(JSON.stringify(results));
+  } catch (error) {
+    console.log("time.actions: Error fetching time", error);
   }
   return [];
 }
@@ -155,38 +195,45 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
 export async function getTimeByDateRangeUser(startDate: Date, endDate: Date, userId:string) {
   try {
   connectToDB();
-  const results: any[]=[];
-  let currentStart=new Date(startDate);
-  const msIn3Months= 3*30*24*60*60*1000;
-
-  while(currentStart < endDate) {
-    const currentEnd = new Date(Math.min(currentStart.getTime() + msIn3Months,endDate.getTime()));
   const time = await Time.find({
-    user: userId,
-    checkInTime: { $gte: currentStart, $lt: new Date(currentEnd.getTime() + 24 * 60 * 60 * 1000) }, 
-}); 
-if (time && time.length>0) {
-  const populateTimes = await Promise.all(
-  time.map(async (t) => {
-  const project = await Project.findById(t.project).select("client project maxTime");
-  return {
-  ...t.toObject(), 
-  projectClient: project?.client, 
-  projectName: project?.project, 
-  projectMaxTime: project?.maxTime, 
-}; 
-  }) 
-  ); 
-  results.push(...populateTimes);
-}
-currentStart=new Date(currentEnd.getTime()+1);
-  }
-  results.sort((a,b)=>new Date(b.checkInTime).getTime()-new Date(a.checkInTime).getTime());
-  return JSON.parse(JSON.stringify(results)); 
-  
-}
-  catch (error) {
-  console.log("time.actions: Error fetching time by date range for user", error);
+      user: userId,
+
+      checkinTime: {
+        $gte: startDate,
+        $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000),
+      },
+    })
+      .sort({ checkintime: -1 })
+      .lean();
+
+    if (time.length === 0) return [];
+
+    // Collect unique project IDs
+
+    const projectIds = [...new Set(time.map((t) => t.project?.toString()))];
+
+    // Fetch all projects in bulk
+
+    const projects = await Project.find({ _id: { $in: projectIds } })
+      .select("client project maxTime")
+      .lean();
+
+    // Create lookup map
+
+    const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
+
+    // Populate times
+
+    const results = time.map((t) => ({
+      ...t,
+      projectClient: projectMap.get(t.project?.toString())?.client,
+      projectName: projectMap.get(t.project?.toString())?.project,
+      projectMaxTime: projectMap.get(t.project?.toString())?.maxTime,
+    }));
+
+    return JSON.parse(JSON.stringify(results));
+  } catch (error) {
+    console.log("time.actions: Error fetching time", error);
   }
   return [];
 }
