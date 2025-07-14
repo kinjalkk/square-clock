@@ -46,10 +46,19 @@ export async function stopTime(timeId:string){
 export async function getTime(userId: string) {
   try {
     connectToDB();
+    const results:any[]=[];
+    const oneYearAgo=new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1);
+    let currentStart=oneYearAgo;
+    const msIn6Months=6*30*24*60*60*1000;
+    const endDate=new Date();
+    while (currentStart <endDate){
+      const currentEnd=new Date(Math.min(currentStart.getTime()+msIn6Months,endDate.getTime()));
     const time = await Time.find({
       user: userId,
-    }).sort({checkInTime:-1});
-    if (time) {
+      checkInTime:{$gte : currentStart,$lt:new Date(currentEnd.getTime()+24*60*60*1000)},
+    });
+    if (time && time.length>0) {
       const populateTimes= await Promise.all(
         time.map(async (t)=>{
           const project=await Project.findById(t.project).select("client project maxTime");
@@ -58,11 +67,15 @@ export async function getTime(userId: string) {
             projectClient:project?.client,
             projectName:project?.project,
             projectMaxTime:project?.maxTime,
-          }
+          };
         })
-      )
-      return JSON.parse(JSON.stringify(populateTimes));
+      );
+      results.push(...populateTimes);
     }
+    currentStart=new Date(currentEnd.getTime()+1);
+  }
+  results.sort((a,b)=>new Date(b.checkInTime).getTime()-new Date(a.checkInTime).getTime());
+    return JSON.parse(JSON.stringify(results));
   } catch (error) {
     console.log("time.actions: Error fetching time", error);
   }
@@ -101,10 +114,16 @@ export async function getAllTimes() {
 }
 export async function getTimeByDateRange(startDate:Date,endDate:Date){
   try{
+    connectToDB();
+    const results:any[]=[];
+    let currentStart= new Date (startDate);
+    const msIn3Months=3*30*24*60*60*1000;
+    while (currentStart < endDate) {
+      const currentEnd= new Date(Math.min(currentStart.getTime()+ msIn3Months, endDate.getTime()));
     const time =await Time.find({
-      checkInTime:{ $gte: startDate, $lt:new Date(endDate.getTime()+24*60*60*1000)},
-    }).sort({checkInTime:-1});
-    if (time) {
+      checkInTime:{ $gte: currentStart, $lt:new Date(currentEnd.getTime()+24*60*60*1000)},
+    });
+    if (time && time.length > 0) {
       const populateTimes= await Promise.all(
         time.map(async (t)=>{
           const project=await Project.findById(t.project).select("client project maxTime");
@@ -116,11 +135,17 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
             projectMaxTime:project?.maxTime,
             userName:user?.username,
             userEmail:user?.email,
-          }
+          };
         })
-      )
-      return JSON.parse(JSON.stringify(populateTimes));
+      );
+      results.push(...populateTimes);
     }
+    currentStart=new Date (currentEnd.getTime()+1);
+  }
+  results.sort((a,b)=>new Date(b.checkInTime).getTime()-new Date(a.checkInTime).getTime());
+
+      return JSON.parse(JSON.stringify(results));
+    
   } catch(error){
     console.log("time.actions: error fetching time",error);
   }
@@ -130,11 +155,17 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
 export async function getTimeByDateRangeUser(startDate: Date, endDate: Date, userId:string) {
   try {
   connectToDB();
+  const results: any[]=[];
+  let currentStart=new Date(startDate);
+  const msIn6Months= 6*30*24*60*60*1000;
+
+  while(currentStart < endDate) {
+    const currentEnd = new Date(Math.min(currentStart.getTime() + msIn6Months,endDate.getTime()));
   const time = await Time.find({
     user: userId,
-    checkInTime: { $gte: startDate, $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000) }, 
-}).sort({ checkInTime: -1 }); 
-if (time) {
+    checkInTime: { $gte: currentStart, $lt: new Date(currentEnd.getTime() + 24 * 60 * 60 * 1000) }, 
+}); 
+if (time && time.length>0) {
   const populateTimes = await Promise.all(
   time.map(async (t) => {
   const project = await Project.findById(t.project).select("client project maxTime");
@@ -146,8 +177,13 @@ if (time) {
 }; 
   }) 
   ); 
-  return JSON.parse(JSON.stringify(populateTimes)); 
+  results.push(...populateTimes);
+}
+currentStart=new Date(currentEnd.getTime()+1);
   }
+  results.sort((a,b)=>new Date(b.checkInTime).getTime()-new Date(a.checkInTime).getTime());
+  return JSON.parse(JSON.stringify(results)); 
+  
 }
   catch (error) {
   console.log("time.actions: Error fetching time by date range for user", error);
