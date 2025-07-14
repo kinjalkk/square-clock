@@ -54,12 +54,12 @@ export async function getTime(userId: string) {
     const time = await Time.find({
       user: userId,
 
-      checkinTime: {
+      checkInTime: {
         $gte: oneYearAgo,
         $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000),
       },
     })
-      .sort({ checkintime: -1 })
+      .sort({ checkInTime: -1 })
       .lean();
 
     if (time.length === 0) return [];
@@ -100,11 +100,11 @@ export async function getAllTimes() {
     const thirtyDaysAgo=new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() -30);
     const time = await Time.find({
-      checkinTime: {
+      checkInTime:{
         $gte: thirtyDaysAgo
       }
     })
-      .sort({ checkintime: -1 })
+      .sort({ checkInTime: -1})
       .lean();
     if (time.length === 0) return [];
 
@@ -123,7 +123,7 @@ const users = await User.find({ _id: { $in: userIds } })
     // Create lookup map
 
     const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
-    const userMap = new Map(projects.map((u) => [u._id.toString(), u]));
+    const userMap = new Map(users.map((u)=>[u._id.toString(),u]));
 
 
     // Populate times
@@ -147,12 +147,12 @@ export async function getTimeByDateRange(startDate:Date,endDate:Date){
   try{
     connectToDB();
     const time = await Time.find({
-      checkinTime: {
+      checkInTime: {
         $gte: startDate,
         $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000),
       },
     })
-      .sort({ checkintime: -1 })
+      .sort({ checkInTime: -1 })
       .lean();
     if (time.length === 0) return [];
 
@@ -171,7 +171,7 @@ const users = await User.find({ _id: { $in: userIds } })
     // Create lookup map
 
     const projectMap = new Map(projects.map((p) => [p._id.toString(), p]));
-    const userMap = new Map(projects.map((u) => [u._id.toString(), u]));
+    const userMap = new Map(users.map((u) => [u._id.toString(), u]));
 
 
     // Populate times
@@ -198,12 +198,12 @@ export async function getTimeByDateRangeUser(startDate: Date, endDate: Date, use
   const time = await Time.find({
       user: userId,
 
-      checkinTime: {
+      checkInTime: {
         $gte: startDate,
         $lt: new Date(endDate.getTime() + 24 * 60 * 60 * 1000),
       },
     })
-      .sort({ checkintime: -1 })
+      .sort({ checkInTime: -1 })
       .lean();
 
     if (time.length === 0) return [];
